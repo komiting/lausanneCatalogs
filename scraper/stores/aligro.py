@@ -56,9 +56,15 @@ class Aligro(Store):
         except Exception as exc:
             self.warn(f"datumi akcija: {exc}")
         offers: dict[str, Offer] = {}
+        failed = 0
         for cat in FOOD_CATEGORIES:
             for page_no in range(1, MAX_PAGES + 1):
-                data = self.http.get(f"{BASE}/actions/{cat}.json", params={"limit": PAGE, "offset": page_no}).json()
+                try:
+                    data = self.http.get(f"{BASE}/actions/{cat}.json", params={"limit": PAGE, "offset": page_no}).json()
+                except Exception as exc:  # one broken category must not sink the whole shop
+                    failed += 1
+                    self.warn(f"kategorija {cat}: {exc}")
+                    break
                 block = data.get("articles") or {}
                 items = block.get("items") or []
                 for item in items:
@@ -71,6 +77,10 @@ class Aligro(Store):
                 total = block.get("total_items") or 0
                 if len(items) < PAGE or page_no * PAGE >= total:
                     break
+        if failed:
+            self.stats["categories_failed"] = failed
+        if not offers:
+            raise RuntimeError("nijedna kategorija akcija nije preuzeta")
         return list(offers.values())
 
 
