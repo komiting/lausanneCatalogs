@@ -10,6 +10,7 @@ from typing import Any
 
 from .basket import BasketItem, load_basket
 from .storage import DataStore, last_seen, resolved_spans
+from .translate import Translations
 from .stores import STORES
 
 HISTORY_DAYS = 400
@@ -91,6 +92,7 @@ def build(data_dir: Path = Path("data"), site_dir: Path = Path("site"), basket: 
 
     # ── current promotions ─────────────────────────────────────────────
     promos = []
+    names = Translations.load(ds)
     for key in ORDER:
         snap = latest.get(key)
         if not snap:
@@ -99,6 +101,11 @@ def build(data_dir: Path = Path("data"), site_dir: Path = Path("site"), basket: 
             p = dict(p)
             p["st"] = key
             p["d"] = snap["date"]
+            sr, approx = names.lookup(p.get("n"))
+            if sr:
+                p["sr"] = sr
+                if approx:
+                    p["sra"] = 1
             promos.append(p)
     sizes["promos.json"] = _dump(out_dir / "promos.json", promos)
 

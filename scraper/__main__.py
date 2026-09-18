@@ -4,6 +4,7 @@
   python -m scraper build
   python -m scraper all    (run + build)
   python -m scraper check  (quick connectivity test)
+  python -m scraper translate  (Serbian names for new promotions; needs ANTHROPIC_API_KEY)
 """
 from __future__ import annotations
 
@@ -25,7 +26,7 @@ ROOT = Path(__file__).resolve().parent.parent
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="scraper", description="Lausanne price tracker")
-    ap.add_argument("command", choices=["run", "build", "all", "check"])
+    ap.add_argument("command", choices=["run", "build", "all", "check", "translate"])
     ap.add_argument("--stores", help="comma separated: " + ",".join(STORES))
     ap.add_argument("--date", help="override today's date (YYYY-MM-DD)")
     ap.add_argument("--data", default=str(ROOT / "data"))
@@ -44,6 +45,11 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "check":
         return check(stores)
+
+    if args.command == "translate":
+        from .translate import run_translate
+        run_translate(Path(args.data))
+        return 0
 
     if args.command in ("run", "all"):
         recorders: dict[str, RecordingHttp] = {}

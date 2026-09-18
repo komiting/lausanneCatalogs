@@ -520,7 +520,7 @@
       if (f.min && (p.pct || 0) < f.min) return false;
       if (f.group && (p._g || (p._g = promoGroup(p))) !== f.group) return false;
       if (words.length) {
-        const t = p._t || (p._t = fold(`${p.n} ${p.b || ""} ${p.c || ""}`));
+        const t = p._t || (p._t = fold(`${p.n} ${p.sr || ""} ${p.b || ""} ${p.c || ""}`));
         if (!words.every((w) => t.includes(w))) return false;
       }
       return true;
@@ -529,7 +529,7 @@
       pct: (a, b) => (b.pct || 0) - (a.pct || 0) || a.n.localeCompare(b.n, "fr"),
       price: (a, b) => (a.p ?? 1e9) - (b.p ?? 1e9),
       unit: (a, b) => (a.up ?? 1e9) - (b.up ?? 1e9),
-      name: (a, b) => a.n.localeCompare(b.n, "fr"),
+      name: (a, b) => (a.sr || a.n).localeCompare(b.sr || b.n, "sr"),
       saving: (a, b) => ((b.r || 0) - (b.p || 0)) - ((a.r || 0) - (a.p || 0)),
     }[f.sort];
     return list.sort(by);
@@ -585,7 +585,13 @@
       h("div", { class: "top" }, h("span", { class: "st" }, swatch(p.st, "dot"), storeName(p.st)), sticker(p)),
       pic ? h("div", { class: "pic" }, img) : null,
       h("div", null,
-        h("h4", null, h("button", { type: "button", onclick: () => openProduct(p.st, p.id), text: p.n })),
+        h("h4", null, h("button", {
+          type: "button",
+          onclick: () => openProduct(p.st, p.id, p.sr),
+          title: p.sra ? "Približan prevod naziva" : null,
+          text: p.sr ? (p.sra ? "≈ " : "") + p.sr : p.n,
+        })),
+        p.sr ? h("div", { class: "orig", lang: "fr", text: p.n }) : null,
         h("div", { class: "sub", text: [p.b, p.s].filter(Boolean).join(" · ") })),
       h("div", null,
         h("div", { class: "pr" },
@@ -678,7 +684,7 @@
   }
   const prevDay = (iso) => new Date(parseISO(iso) - DAY).toISOString().slice(0, 10);
 
-  async function openProduct(k, pid) {
+  async function openProduct(k, pid, srName) {
     const dlg = document.getElementById("sheet");
     fill(dlg, h("div", { class: "sheet-body" }, h("p", { class: "muted", text: "Učitavanje istorije…" })));
     if (!dlg.open) dlg.showModal();
@@ -702,6 +708,7 @@
       stat("Na akciji", promoPeriods ? `${promoPeriods}× (${promoDays} ${plural(promoDays, "dan", "dana", "dana")})` : "nije bilo"),
       stat("Praćen od", fmtDate(p.f, true)));
     const sub = h("div", { class: "sub" },
+      srName ? h("span", { lang: "fr", text: p.n }) : null,
       h("span", { style: "display:inline-flex;align-items:center;gap:6px" }, swatch(k), [storeName(k), p.b, p.s, p.c].filter(Boolean).join(" · ")),
       p.url ? h("a", { href: p.url, target: "_blank", rel: "noopener", text: "otvori u prodavnici ↗", style: "color:var(--accent)" }) : null);
     const chart = ser.values.some((v) => v != null)
@@ -716,7 +723,7 @@
       h("thead", null, h("tr", null, h("th", { text: "Od datuma" }), h("th", { text: "Cena" }), h("th", { text: "Redovna" }), h("th", { text: "Akcija" }))),
       h("tbody", null, [...(p.h || [])].reverse().map((r) => h("tr", null,
         h("td", { text: fmtDate(r[0], true) }), h("td", { text: money(r[1]) }), h("td", { text: money(r[2]) }), h("td", { text: r[3] ? (r[4] || "da") : "" }))))));
-    fill(dlg, sheetHead(p.n, sub, dlg), h("div", { class: "sheet-body" }, stats, chart, h("h4", { text: "Promene cene", style: "margin:4px 0 0" }), changes));
+    fill(dlg, sheetHead(srName || p.n, sub, dlg), h("div", { class: "sheet-body" }, stats, chart, h("h4", { text: "Promene cene", style: "margin:4px 0 0" }), changes));
   }
   function stat(k, v) { return h("div", { class: "stat" }, h("div", { class: "k", text: k }), h("div", { class: "v", text: v })); }
   function sheetHead(title, sub, dlg) {
