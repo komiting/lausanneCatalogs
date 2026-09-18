@@ -10,40 +10,6 @@ Sve radi besplatno na GitHub-u: GitHub Actions pokreće preuzimanje svakog dana,
 
 ---
 
-## Postavljanje (≈10 minuta, jednom)
-
-Potrebno: GitHub nalog i `git` na Mac-u (ako ga nemaš, Terminal će ponuditi instalaciju *Command Line Tools* kada prvi put ukucaš `git`).
-
-1. **Napravi repozitorijum** na <https://github.com/new>
-   - ime npr. `lozanska-korpa`
-   - **Public** (GitHub Pages je besplatan samo za javne repozitorijume)
-   - bez README/.gitignore (prazan repozitorijum)
-
-2. **Pošalji kod.** Svi fajlovi su već u folderu `lausanneScraper` (folder `.github` je skriven u Finder-u — prikazuje se sa ⌘ Shift .). U Terminalu:
-
-   ```bash
-   cd ~/lausanneScraper
-   git init -b main
-   git add .
-   git commit -m "Prva verzija"
-   git remote add origin https://github.com/TVOJE-KORISNICKO-IME/lozanska-korpa.git
-   git push -u origin main
-   ```
-
-   Kada git traži lozinku, unesi *personal access token* (GitHub → Settings → Developer settings → Personal access tokens), ili se prethodno prijavi sa `gh auth login` ako koristiš GitHub CLI. Može i preko aplikacije GitHub Desktop.
-
-3. **Uključi GitHub Pages:** repozitorijum → *Settings* → *Pages* → *Source*: **GitHub Actions**.
-   (Workflow **Objavi sajt** se pokrenuo već pri slanju koda i verovatno je pao jer Pages još nije bio uključen — to je očekivano, sledeće pokretanje prolazi.)
-
-4. **Dozvoli upis za Actions:** *Settings* → *Actions* → *General* → *Workflow permissions*: **Read and write permissions** → *Save*.
-
-5. **Prvo preuzimanje:** kartica *Actions* → **Preuzmi cene** → *Run workflow*. Traje par minuta. Kada završi, automatski se pokreće **Objavi sajt**.
-
-6. Sajt je na `https://TVOJE-KORISNICKO-IME.github.io/lozanska-korpa/`.
-
-Posle toga se sve dešava samo, svakog jutra oko 6:40 (zimi 5:40). Svaki dan postaje jedan commit sa novim cenama u folderu `data/`.
-
-U `data/` je već prvo preuzimanje od 16. 9. 2026, pa sajt ima podatke odmah posle prvog objavljivanja. Grafikoni postaju zanimljivi posle nekoliko dana.
 
 > GitHub gasi zakazane workflow-ove u javnim repozitorijumima posle 60 dana bez aktivnosti. Dnevni commit-ovi to obično sprečavaju; ako se ipak ugasi, u kartici *Actions* klikni **Enable workflow**.
 
