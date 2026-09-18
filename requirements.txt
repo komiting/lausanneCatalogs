@@ -1,0 +1,3 @@
+curl_cffi>=0.7
+pytest>=8
+tomli>=2; python_version < "3.11"

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lozanska korpa</title>
+<meta name="description" content="Dnevno praćenje cena i akcija u prodavnicama Aldi, Migros, Coop, Lidl i Aligro oko Lozane.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='14' width='52' height='36' rx='6' fill='%23ffd21f'/%3E%3Ccircle cx='18' cy='32' r='5' fill='%230f1a17'/%3E%3Cpath d='M30 26h18M30 38h12' stroke='%230f1a17' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&amp;family=Instrument+Sans:wght@400..700&amp;display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!--PAGE-->
+<header class="wrap masthead">
+  <div class="brand">
+    <h1>Lozanska korpa<span class="tag">CHF/kg</span></h1>
+    <p>Cene osnovnih namirnica i akcije u prodavnicama Aldi, Migros, Coop, Lidl i Aligro oko Lozane — ažurira se svakog jutra.</p>
+  </div>
+  <div class="updated" id="updated" aria-live="polite"><span class="dot"></span><span>Učitavanje…</span></div>
+</header>
+<nav class="tabs" aria-label="Sekcije">
+  <div class="wrap" id="tabs">
+    <a href="#korpa" data-view="korpa">Korpa</a>
+    <a href="#akcije" data-view="akcije">Akcije <span class="count" id="promo-count"></span></a>
+    <a href="#proizvodi" data-view="proizvodi">Istorija<span class="wide-only"> cena</span></a>
+    <a href="#o-sajtu" data-view="o-sajtu">O sajtu</a>
+  </div>
+</nav>
+<main class="wrap" id="app">
+  <p class="muted">Učitavanje podataka…</p>
+</main>
+<footer class="wrap">
+  Lični projekat za praćenje cena. Nije povezan sa prodavnicama Aldi, Migros, Coop, Lidl ni Aligro. Cene su preuzete sa njihovih javnih sajtova i mogu se razlikovati od cena u pojedinačnim prodavnicama.
+</footer>
+<dialog class="sheet" id="sheet" aria-labelledby="sheet-title"></dialog>
+<!--/PAGE-->
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,346 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# KORPA — proizvodi čije cene sajt prati u svim prodavnicama.
+#
+# Za svaki proizvod:
+#   id       kratak identifikator (bez razmaka, ne menjaj ga posle — veže istoriju)
+#   name     naziv koji se prikazuje na sajtu
+#   group    grupa na sajtu
+#   unit     jedinica poređenja: "kg", "l" ili "pc" (komad)
+#   query    pojam za pretragu na francuskom (Migros i Coop)
+#   queries  (opciono) drugačiji pojmovi za pojedine prodavnice, npr. { coop = ["..."] }
+#   include  lista regex izraza — naziv proizvoda mora da sadrži SVAKI od njih
+#   exclude  regex — proizvod se preskače ako naziv ili kategorija sadrže nešto od ovoga
+#   min_qty / max_qty  (opciono) granice veličine pakovanja u izabranoj jedinici
+#   note     (opciono) napomena koja se vidi na sajtu
+#
+# Pravila ne razlikuju velika/mala slova i ignorišu akcente (é = e, œ = oe).
+# Svakog dana se za svaku prodavnicu bira proizvod sa NAJNIŽOM cenom po jedinici.
+# ─────────────────────────────────────────────────────────────────────────────
+
+[[item]]
+id = "pileca-prsa"
+name = "Pileća prsa"
+group = "Meso i riba"
+unit = "kg"
+query = "poitrine de poulet"
+queries = { coop = ["poitrine de poulet", "blanc de poulet"] }
+include = ["poulet|chicken|poularde", "poitrine|blanc|filet|emince|escalope|brust"]
+exclude = "pane|nugget|cordon|fume|epice|marine|kebab|sauce|salade|sandwich|wrap|jambon|saucisse|hache|bouillon|chat|chien|curry|tikka|pizza|croquette|chips|tranche|charcuterie|grill|bbq|tandoori|soupe|lasagne|nouille|\\briz\\b|cuit|roti|chasseur|cornet|strips|crispy|croustillant|aile|cuisse|poivre"
+min_qty = 0.2
+
+[[item]]
+id = "pileci-bataci"
+name = "Pileći bataci"
+group = "Meso i riba"
+unit = "kg"
+query = "cuisses de poulet"
+include = ["poulet|chicken", "cuisse|pilon|schenkel|drumstick"]
+exclude = "pane|epice|marine|sauce|grill|bbq|kebab|chat|chien|fume|roti|cuit|nugget|croustillant|crispy|tandoori|curry|chili|paprika|miel|teriyaki|hot"
+min_qty = 0.3
+
+[[item]]
+id = "junece-mleveno"
+name = "Junetina, mleveno meso"
+group = "Meso i riba"
+unit = "kg"
+query = "viande hachée de boeuf"
+include = ["hache|hachee|hackfleisch", "boeuf|rind|beef"]
+exclude = "porc|veau|mixte|vegan|vege|planted|burger|sauce|bolognese|lasagne|boulette|cevapcici|kebab|chat|chien|pizza|ravioli|cannelloni|plat|chili|tomate|tortellini|gratin|hachis|parmentier|moussaka"
+min_qty = 0.2
+
+[[item]]
+id = "tunjevina"
+name = "Tunjevina (konzerva)"
+group = "Meso i riba"
+unit = "kg"
+query = "thon en boîte"
+queries = { coop = ["thon"], aldi = ["thon"] }
+include = ["thon|thunfisch|tuna"]
+exclude = "salade|pizza|sauce|sandwich|frais|steak|sushi|chat|chien|pate|creme|tartinade|rillettes|carpaccio|tataki|poke|wrap|mayo|surgel|filet de thon frais|dip|spread|crackers|pates|riz|tomate|legume|haricot|mais|citron|piment|chili|curry|poivre|oignon|\benv\b|albacore frais|\\bplat\\b"
+min_qty = 0.1
+note = "Neto težina konzerve (sa uljem/vodom)."
+
+[[item]]
+id = "losos"
+name = "Losos (filet)"
+group = "Meso i riba"
+unit = "kg"
+query = "filet de saumon"
+include = ["saumon|lachs|salmon"]
+exclude = "fume|sushi|sauce|pate|chat|chien|tartare|rillettes|poke|sandwich|salade|wrap|terrine|mousse|gravlax|carpaccio|kebab|burger|croquette|pane|bouillon|marine|epice|oeufs|caviar|cuit|roti|grille|crackers|tagliatelle|pates|riz|lasagne|quiche|tarte|feuillete|pizza|spread|dip|creme|aneth|citron|ciboulette|miel|teriyaki|pave aux|asiatique|thai|curry|tomate|mozzarella|moutarde|dijon|poivre|herbes|pesto|beurre|provencal|onigiri|edamame|sashimi|pasta|box|fusilli"
+min_qty = 0.1
+
+[[item]]
+id = "jaja"
+name = "Jaja"
+group = "Mlečni proizvodi i jaja"
+unit = "pc"
+query = "oeufs"
+include = ["\\boeufs?\\b|\\beier\\b"]
+exclude = "chocolat|paques|pate|nouille|liqueur|mayonnaise|salade|cuit|\\bdurs?\\b|teint|caille|poudre|kinder|pasta|spaetzli|spatzli|knopfli|tagliatelle|lasagne|biscuit|meringue|flan|saumon|caviar|cabillaud|lompe|truite|surprise|farce|brioche|tresse|omelette|sandwich|brouille|creme|dessert|sucre|pique-nique|picnic|gaufre|epices|boite|carton|pic-nic"
+min_qty = 4
+
+[[item]]
+id = "mleko"
+name = "Mleko"
+group = "Mlečni proizvodi i jaja"
+unit = "l"
+query = "lait entier"
+note = "Najjeftinije kravlje mleko (pasterizovano ili UHT)."
+include = ["\\blait\\b|milch", "entier|drink|uht|past|vollmilch|demi|\\bup\\b"]
+exclude = "chocolat|cafe|coco|amande|avoine|soja|\\briz\\b|poudre|condense|fermente|glace|bain|corps|creme|beurre|biscuit|branche|ovo|caramel|fraise|banane|vanille|protein|bebe|croissance|chevre|brebis|kefir|yogourt|yaourt|frappe|shake|cacao|\\bthe\\b|latte|macchiato|cappuccino|pain|petit|chips|fromage|sere|drink au|boisson|mix|lactose|sans lactose|a2|bio drink"
+min_qty = 0.5
+
+[[item]]
+id = "skyr"
+name = "Skyr (natur)"
+group = "Mlečni proizvodi i jaja"
+unit = "kg"
+query = "skyr nature"
+queries = { coop = ["skyr"] }
+include = ["skyr", "nature|natur|plain"]
+exclude = "drink|boisson|shake|glace|biscuit|muesli|barre|fraise|framboise|myrtille|vanille|mangue|peche|citron|cerise|abricot|fruits|coco|banane|chocolat|caramel|pomme|poire|baies|passion|rhubarbe|cassis|stracciatella|cookie|noisette|miel|granola|pistache|melon|ananas|kiwi|alternati|vegetal|vegan|alpro"
+min_qty = 0.1
+
+[[item]]
+id = "posni-sir"
+name = "Posni sir (séré / quark)"
+group = "Mlečni proizvodi i jaja"
+unit = "kg"
+query = "séré maigre nature"
+queries = { coop = ["séré maigre", "séré"], migros = ["séré", "séré maigre"] }
+include = ["\\bsere\\b|quark"]
+exclude = "fraise|framboise|vanille|citron|fruits|abricot|mangue|chocolat|dessert|herbes|\\bail\\b|dip|cheesecake|gateau|tarte|pomme|baies|myrtille|cerise|peche|coco|banane|caramel|stracciatella|cookie|tiramisu|poire|passion|rhubarbe|ciboulette|oignon|epice|pistache|noisette|miel|muesli|granola|boisson|drink|shake|pudding|glace|a la creme|demi-gras|3/4|double|\bcreme\b|truffe|moka|tourte|oetker|hutte|yogourt|yaourt"
+min_qty = 0.1
+
+[[item]]
+id = "jogurt"
+name = "Jogurt natur"
+group = "Mlečni proizvodi i jaja"
+unit = "kg"
+query = "yogourt nature"
+queries = { coop = ["yogourt nature", "yaourt nature"] }
+include = ["yogourt|yaourt|yoghourt|joghurt|jogurt|yogurt", "nature|natur|grec|greek|bulgare|plain"]
+exclude = "fraise|framboise|vanille|citron|fruits|abricot|mangue|chocolat|dessert|boisson|a boire|drink|glace|muesli|biscuit|chat|chien|sauce|dip|coco|soja|avoine|amande|vegan|vegetal|brebis|chevre|miel|cereale|granola|cookie|caramel|cafe|mocca|stracciatella|banane|peche|myrtille|cerise|poire|pomme|baies|noisette|rhubarbe|melon|lactose|protein|kefir|herbes|ail|concombre|tzatziki|yogolino|\bmois\b|mandarine|orange|griotte|pruneau"
+min_qty = 0.1
+
+[[item]]
+id = "cottage"
+name = "Cottage cheese"
+group = "Mlečni proizvodi i jaja"
+unit = "kg"
+query = "cottage cheese"
+include = ["cottage"]
+exclude = "sauce|dip|fruits|ananas|herbes|ciboulette|poivre|tomate|salade|sandwich|wrap|huile|olive|poivron|piment|vegetal|vegan|\bbol\b|legume|haricot|edamame"
+min_qty = 0.1
+
+[[item]]
+id = "maslac"
+name = "Maslac"
+group = "Mlečni proizvodi i jaja"
+unit = "kg"
+query = "beurre"
+queries = { coop = ["beurre de cuisine", "beurre"] }
+include = ["beurre|butter"]
+exclude = "cacahuete|arachide|amande|noisette|croissant|biscuit|sauce|\\bail\\b|herbes|cookie|tresse|pate|cacao|karite|corps|brezel|bretzel|creme au|a la creme|petit|pain|gateau|sable|galette|caramel|cafe|escargot|margarine|vegan|vegetal|plante|allege|light|ghee|clarifie|concentre|a tartiner|tartinable|sel de|fleur de sel|truffe|miel|chocolat|peanut|erdnuss|mandel|nuss|brioche|kouign|tourte|fondant|pomme|poire|lait battu|babeurre|buttermilch|buttermilk|rosti|fondu|cookies|poulet|fish|poisson|stollen|colza|huile|arome|steak|porc|gaufrette|au beurre|chicken"
+min_qty = 0.1
+
+[[item]]
+id = "mocarela"
+name = "Mocarela"
+group = "Mlečni proizvodi i jaja"
+unit = "kg"
+query = "mozzarella"
+include = ["mozzarella"]
+exclude = "pizza|stick|pane|chips|sandwich|sauce|salade|burger|panini|toast|pain|wrap|lasagne|vegan|vegetal|tomate|basilic|pesto|antipasti|tarte|quiche|crackers|bites|croquette|arancini|piadina|focaccia|bufala e|cheese bites|nuggets|burrata|pochette|epinard|snackbox|batonnet|assortiment|surgel|buitoni"
+min_qty = 0.1
+
+[[item]]
+id = "gruyere"
+name = "Sir Gruyère"
+group = "Mlečni proizvodi i jaja"
+unit = "kg"
+query = "gruyère"
+include = ["gruyere|greyerzer"]
+exclude = "fondue|sauce|chips|biscuit|croute|gratin|quiche|sable|cracker|pain|soupe|tarte|burger|salade|snack|flute|ramequin|croissant|feuillete|raclette|jambon|sandwich|pizza|macaronis|risotto|tresse|brezel|bretzel|cake|gougere|dip|cuchaule|allumette|stick|double creme|fondu|blevita|\blait\b"
+min_qty = 0.1
+
+[[item]]
+id = "ovsene-pahuljice"
+name = "Ovsene pahuljice"
+group = "Žitarice i hleb"
+unit = "kg"
+query = "flocons d'avoine"
+include = ["avoine|hafer|oat", "flocon|flakes|flocken"]
+exclude = "muesli|barre|biscuit|boisson|\\blait\\b|chocolat|cookie|drink|\\bson\\b|farine|galette|crunchy|granola|pomme|fruits|baies|coco|miel|noix|cup|\\bpot\\b|instant|bircher|porridge|cannelle|cacao|banane|myrtille|framboise|fraise|vanille|protein|proteine|choco|crusli|mix|epeautre|seigle|orge|ble|riz|mais|quinoa|sarrasin|soup|bon chef|\bbuns?\b|burger|knorr|holle|babykeks"
+min_qty = 0.25
+
+[[item]]
+id = "pirinac"
+name = "Pirinač"
+group = "Žitarice i hleb"
+unit = "kg"
+query = "riz basmati"
+queries = { migros = ["riz", "riz basmati"], coop = ["riz", "riz basmati"] }
+include = ["\\briz\\b|\\breis\\b|\\brice\\b"]
+exclude = "galette|\\blait\\b|gaufrette|cracker|nouille|vermicelle|vinaigre|papier|pret|minute|express|sachet|souffle|chips|saute|salade|pudding|boisson|cake|fleur|farine|sauce|curry|plat|poulet|legume|\\bmais\\b|creme|dessert|puff|waffle|feuille|galettes|snack|drink|bebe|cuit|micro|paella|risotto aux|champignon|tomate|asiatique|cantonais|poele|bowl|sushi|onigiri|glace|protein|chocolat|amande|coco|avoine|cereale|crispies|pops|galet|arancini|biscuit|sirop|amidon|vin|sake|mochi|cuiseur|ambiano|appareil|choco|shells"
+min_qty = 0.5
+
+[[item]]
+id = "spagete"
+name = "Špagete"
+group = "Žitarice i hleb"
+unit = "kg"
+query = "spaghetti"
+include = ["spaghetti|spaghettoni"]
+exclude = "sauce|bolognese|carbonara|plat|pret|frais|fraiche|sans gluten|glutenfrei|lentille|\\bpois\\b|konjac|courgette|cuit|\\bkit\\b|conserve|boite|surgel|nouille|squash|pinces|pince|egouttoir|cuillere|mesure|machine|doseur|balance|tomate|pesto|vongole|aglio|napoli|arrabbiata|legume|proteine|protein|integrale au|spaghettini au|haribo|pomme|fraise|bonbon|bolognaise|boeuf"
+min_qty = 0.25
+
+[[item]]
+id = "tost-hleb"
+name = "Tost hleb"
+group = "Žitarice i hleb"
+unit = "kg"
+query = "pain toast"
+queries = { coop = ["pain toast", "pain de mie"] }
+include = ["toast|pain de mie"]
+exclude = "croque|jambon|fromage|grille|toaster|crouton|salami|saumon|chips|melba|fertig|pizza|bruschetta|french|garlic|\\bail\\b|appareil|toastbrot au|thon|poulet|avocat|sandwich au|pinces|beurre|confiture|nutella|miel|hawai|mini toast|crackers|cracottes|zwieback|biscotte"
+min_qty = 0.2
+
+[[item]]
+id = "tortilje"
+name = "Tortilje (wraps)"
+group = "Žitarice i hleb"
+unit = "kg"
+query = "tortilla wraps"
+queries = { coop = ["tortilla", "wraps"], migros = ["tortillas"] }
+include = ["tortilla|wrap"]
+exclude = "chips|salsa|\\bkit\\b|sauce|nachos|poulet|thon|jambon|\\bdip\\b|fromage|legume|falafel|kebab|sandwich|salade|pret|burrito|chili|guacamole|croustill|film|papier|alu|plastique|emballage|stretch|cellophane|feuille|bacon|saumon|mozzarella|crevette|boeuf|porc|poisson|cheese|chicken|veggie|vegan|tofu|chorizo|espagnole|patate|pomme de terre|oeuf|omelette|crispy|bites|rolls|pizza|mini|sans gluten|pommes? de terre"
+min_qty = 0.15
+
+[[item]]
+id = "krompir"
+name = "Krompir"
+group = "Voće i povrće"
+unit = "kg"
+query = "pommes de terre"
+include = ["pommes? de terre|kartoffel"]
+exclude = "chips|frite|puree|rosti|croquette|gratin|salade|wedge|flocon|gnocchi|dauphin|\\bfour\\b|surgel|potato|galette|soupe|\\bfarine\\b|amidon|country|noisette|sautee|cuit|vapeur|pelee|epluchee|patate douce|douce|quartier|cube|tranche|allumette|chip|pret|bouillon|en robe|au romarin|a la creme|smiles|hash|pizza|tortilla|pain|rosti|plat|mix|legumes|carottes|oignon|poireau|batonnet|snack|pom-bar|pochette|poisson|pane|filet"
+min_qty = 0.5
+
+[[item]]
+id = "banane"
+name = "Banane"
+group = "Voće i povrće"
+unit = "kg"
+query = "bananes"
+include = ["banane"]
+exclude = "chips|seche|muesli|yogourt|\\blait\\b|smoothie|bread|cake|\\bjus\\b|puree|bebe|biscuit|glace|chocolat|barre|sirop|plantain|shake|boisson|mix|confiture|compote|pain|gateau|dessert|drink|fruit|pomme|fraise|kiwi|mangue|ananas|coco|caramel|split|flan|pudding|bonbon|gomme|sucette|protein|avoine|porridge|travel|miomojo|active|\bsac\b|\bmois\b|holle|myrtille"
+min_qty = 0.5
+
+[[item]]
+id = "jabuke"
+name = "Jabuke"
+group = "Voće i povrće"
+unit = "kg"
+query = "pommes"
+queries = { migros = ["pommes gala", "pommes"], coop = ["pommes gala", "pommes"] }
+include = ["\\bpommes?\\b|apfel|aepfel"]
+exclude = "de terre|\\bjus\\b|compote|chips|seche|puree|vinaigre|cidre|tarte|strudel|chausson|beignet|mousse|sirop|cannelle|gateau|biscuit|muesli|smoothie|yogourt|boisson|sauce|gelee|confiture|pain|vinaigrette|shampooing|savon|frite|rosti|dauphin|galette|cuite|mangue|poire|kiwi|\\bmix\\b|salade|bebe|bircher|cake|croquette|au four|nectar|\\bthe\\b|infusion|glace|sorbet|crumble|secs|rondelles|anneaux|dessert|pudding|drink|shake|spritz|schorle|bonbon|gomme|sucette|dentifrice|parfum|bougie|cheveux|douche|corps|nettoyant|lessive|vaisselle|pomme de pin|caramel|choco|avoine|flocons|protein|barre|snack|kids|enfant|mini|rissol|duchesse|spaghetti|squee|ironmaxx|fraise|fruchtbar|haribo|noisette"
+min_qty = 0.5
+
+[[item]]
+id = "paradajz"
+name = "Paradajz (svež)"
+group = "Voće i povrće"
+unit = "kg"
+query = "tomates"
+queries = { migros = ["tomates rondes", "tomates"], coop = ["tomates rondes", "tomates"] }
+include = ["tomate"]
+exclude = "sauce|concentre|seche|pelee|coulis|passata|ketchup|soupe|pesto|\\bjus\\b|pizza|chips|concasse|hachee|puree|pulpe|confit|conserve|salade|mozzarella|basilic|olive|farcie|tartinade|crackers|\\bpate\\b|pates|cuit|bruschetta|gaspacho|risotto|\\briz\\b|\\bsel\\b|epice|gnocchi|ravioli|pain|focaccia|tapenade|dip|poudre|boite|brique|ketchup|arrabbiata|napoli|bolognese|chili|salsa|plant|graine|semence|terreau|engrais|thon|sardine|maquereau|haricot|lentille|pois|legume|poivron|oignon|courgette|aubergine|feta|fromage|chevre|cake|tarte|quiche|galette|biscuit|snack|grissini|tortilla|wrap|crevette|poulet|mais|bretzel|hareng|filet|morceaux|cappellacci|burrata|pasta|tortellini"
+min_qty = 0.2
+
+[[item]]
+id = "crni-luk"
+name = "Crni luk"
+group = "Voće i povrće"
+unit = "kg"
+query = "oignons"
+include = ["oignon|zwiebel"]
+exclude = "\\bfrit|rings|soupe|confit|poudre|seche|sauce|chips|marine|tarte|creme|pain|\\bdip\\b|epice|croustillant|grille|surgel|\\bail\\b|printemps|botte|nouveau|jeune|cebette|ciboulette|echalote|grelot|cocktail|vinaigre|pickles|bouillon|mix|legume|pomme|carotte|poireau|poivron|tomate|chip|snack|crackers|saucisse|steak|foie|burger|hachis|pizza|quiche|flammekueche|biscuit|salade|pickled|bretzel|miel|moutarde|fromage|herbes|houmous|caramelise|argente|brunoise|en des|lamelles|emince"
+min_qty = 0.5
+
+[[item]]
+id = "paprika"
+name = "Paprika (babura)"
+group = "Voće i povrće"
+unit = "kg"
+query = "poivrons"
+include = ["poivron|peperoni"]
+exclude = "farci|grille|pate|sauce|chips|poudre|marine|conserve|pesto|tapenade|\\bdip\\b|creme|antipasti|huile|confit|surgel|epice|chip|piment|ajvar|harissa|saucisse|salami|chorizo|chili|mais|haricot|salade|tortilla|wrap|pizza|quiche|tarte|crackers|snack|fromage|hummus|houmous|sel|poivre noir|graine|semence|plant|poudre de|doux fume|rouleaux|legume|bocal|verre|fume|thon|feta|raclette|tranche|poulet|sachet|cerise|schinken|jambon|miel|moutarde|dinde|emince|melange|betty bossi|filets de poivron|salsa|pronta|peppadew|peppadrop|lanieres|julienne|entiers extra|en des|piquillo|pimientos"
+min_qty = 0.2
+
+[[item]]
+id = "brokoli"
+name = "Brokoli"
+group = "Voće i povrće"
+unit = "kg"
+query = "brocoli"
+include = ["brocoli|broccoli|brokkoli"]
+exclude = "soupe|gratin|salade|sauce|chips|\\bmix\\b|melange|puree|bebe|pesto|tarte|quiche|galette|nugget|burger|risotto|pates|\\briz\\b|bowl|wok|poelee|fromage|creme|legumes|chou-fleur|carotte|haricot|graine|semence|plant|pousse|germe|steak|boulette|croquette|pizza|lasagne|poulet|filet|gourmand|poisson|seafood|asperge|bimi|bites|sarrasin"
+min_qty = 0.2
+note = "Svež ili smrznut — bira se najjeftiniji po kg."
+
+[[item]]
+id = "pelat"
+name = "Pelat / seckani paradajz"
+group = "Ostava"
+unit = "kg"
+query = "tomates concassées"
+queries = { migros = ["tomates concassées", "tomates pelées"], coop = ["tomates concassées", "tomates pelées"] }
+density = 1.0
+include = ["tomate|pomodor", "pelee|concasse|hachee|passata|pulpe|puree|polpa|coulis|morceaux"]
+exclude = "ketchup|seche|soupe|pesto|pizza|chips|concentre|ravioli|gnocchi|olive|piment|arrabbiata|bolognese|napoli|chili|legume|thon|\\bpates\\b|\\briz\\b|oignon|ail et|sauce aux|herbes de|mozzarella|basilic et|tomates cerises|cerise|datterini|poivron|lentille|haricot|pois chiche|mais"
+min_qty = 0.2
+
+[[item]]
+id = "leblebije"
+name = "Leblebije"
+group = "Ostava"
+unit = "kg"
+query = "pois chiches"
+include = ["pois chiche|kichererbse|chickpea"]
+exclude = "houmous|hummus|farine|snack|chips|curry|falafel|salade|grille|roti|burger|crackers|pates|soupe|spread|tartinade|\\bdip\\b|croustillant|crunchy|epice|chocolat|bowl|plat|legume|lentille|haricot|mix|melange|quinoa|boulgour|couscous|riz|proteine|protein|pasta|fusilli|penne|spaghetti|nouilles|galette|biscuit|cube|steak|nugget|boulette|croquette|poivron|tomate|epinard"
+min_qty = 0.2
+note = "Konzerva ili suve — bira se najjeftinije po kg (proveri tip pakovanja)."
+
+[[item]]
+id = "maslinovo-ulje"
+name = "Maslinovo ulje"
+group = "Ostava"
+unit = "l"
+query = "huile d'olive"
+include = ["huile d'olive|olivenol|olive oil|huile olive"]
+exclude = "spray|sardine|thon|olives vertes|tapenade|chips|pesto|savon|\\bail\\b|piment|citron|basilic|truffe|romarin|herbes|anchois|artichaut|tomate|poivron|legume|antipasti|pain|focaccia|crackers|biscuit|mayonnaise|\\bdip\\b|sauce|vinaigrette|soin|corps|cheveux|creme|lotion|mozzarella|feta|maquereau|poisson|champignon|aubergine|courgette|oignon|lentille|fromage|chevre|grille|seches|sechees|confit|crevette|poulpe|calamar|moule|saumon|haricot|pois|mais|snack|taralli|grissini|gressins|olives noires|dentifrice|nettoyant|shampoing|shampooing|douche|lingette|bebe|pommade|baume|bougie|parfum|vinaigre|balsamique|grissotti"
+min_qty = 0.25
+
+[[item]]
+id = "kikiriki-puter"
+name = "Puter od kikirikija"
+group = "Ostava"
+unit = "kg"
+query = "beurre de cacahuètes"
+queries = { coop = ["beurre de cacahuètes", "peanut butter"] }
+include = ["cacahuete|arachide|peanut|erdnuss", "beurre|butter|creme|puree|\\bmus\\b|pate"]
+exclude = "biscuit|\\bbarre|chocolat|\\bcups?\\b|cookie|snack|sauce|satay|glace|bonbon|dragee|m&m|wafer|gaufrette|cereale|muesli|granola|boisson|shake|poudre|protein bar|bar\\b|pretzel|bretzel|crackers|flips|chips|puffs|popcorn|caramel|nougat|praline|tablette|confiserie|kinder|reese|snickers|twix|mars|bounty|kitkat|kit kat|toffee|crispy|crisps|cake|brownie|muffin|donut|pancake|tartelette|biscuits|cookies|galette|riz|mais|avoine|flocons|chien|chat|oiseau|rongeur|jouet|friandise|be-kind|croustillant|proteine"
+min_qty = 0.15
+
+[[item]]
+id = "bademi"
+name = "Bademi"
+group = "Ostava"
+unit = "kg"
+query = "amandes"
+include = ["amande|mandel|almond"]
+exclude = "\\blait\\b|boisson|drink|chocolat|\\bpate\\b|biscuit|barre|creme|huile|farine|caramel|sucre|dragee|nougat|croissant|glace|yogourt|muesli|granola|savon|corps|beurre|puree|macaron|frangipane|marzipan|massepain|cake|gateau|tarte|praline|mix|melange|fruits secs|raisin|noix de|noisette|cajou|pistache|cacahuete|arachide|abricot|datte|figue|pruneau|cranberry|canneberge|baies|chips|crackers|snack|kernel|shampooing|douche|lotion|lingette|bebe|chat|chien|friandise|dessert|pudding|tofu|vegan|fromage|parmesan|pesto|sauce|biscotti|amaretti|cantucci|nougatine|nougat|sable|financier|tuile|florentin|mendiant|panettone|stollen|tresse|brioche|pain|galette|kouign|flan|mousse|bonbon|gomme|sucette|calisson|pralinee|choco|caramelise|grille au miel|miel|epice|piment|paprika|wasabi|bbq|tamari|soja|curry|sel et poivre|romarin|thym|speculoos|olive|assortiment|noel|vanille|farcie|apero|fumee|moulue|effilee|eff?ilee|batonnet"
+min_qty = 0.1

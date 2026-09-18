@@ -1,0 +1,96 @@
+{
+ "runs": [
+  {
+   "date": "2026-09-16",
+   "stores": {
+    "aldi": "ok",
+    "aligro": "ok",
+    "coop": "ok",
+    "lidl": "ok",
+    "migros": "ok"
+   }
+  }
+ ],
+ "stores": {
+  "aldi": {
+   "counts": {
+    "basket": 23,
+    "changes": 1945,
+    "products": 2010,
+    "promos": 113
+   },
+   "error": null,
+   "last_ok": "2026-09-16",
+   "last_run": "2026-09-16T13:42:32+00:00",
+   "prev_ok": null,
+   "requests": 39,
+   "seconds": 0.4,
+   "status": "ok",
+   "warnings": []
+  },
+  "aligro": {
+   "counts": {
+    "basket": 19,
+    "changes": 1437,
+    "products": 1437,
+    "promos": 1437
+   },
+   "error": null,
+   "last_ok": "2026-09-16",
+   "last_run": "2026-09-16T13:42:33+00:00",
+   "prev_ok": null,
+   "requests": 636,
+   "seconds": 0.4,
+   "status": "ok",
+   "warnings": []
+  },
+  "coop": {
+   "counts": {
+    "basket": 31,
+    "changes": 1578,
+    "products": 1595,
+    "promos": 1152
+   },
+   "error": null,
+   "last_ok": "2026-09-16",
+   "last_run": "2026-09-16T13:42:32+00:00",
+   "prev_ok": null,
+   "requests": 169,
+   "seconds": 0.1,
+   "status": "ok",
+   "warnings": []
+  },
+  "lidl": {
+   "counts": {
+    "basket": 9,
+    "changes": 220,
+    "products": 443,
+    "promos": 313
+   },
+   "error": null,
+   "last_ok": "2026-09-16",
+   "last_run": "2026-09-16T13:42:32+00:00",
+   "prev_ok": null,
+   "requests": 621,
+   "seconds": 0.1,
+   "status": "ok",
+   "warnings": []
+  },
+  "migros": {
+   "counts": {
+    "basket": 31,
+    "changes": 408,
+    "products": 408,
+    "promos": 65
+   },
+   "error": null,
+   "last_ok": "2026-09-16",
+   "last_run": "2026-09-16T13:42:32+00:00",
+   "prev_ok": null,
+   "requests": 111,
+   "seconds": 0.1,
+   "status": "ok",
+   "warnings": []
+  }
+ }
+}
