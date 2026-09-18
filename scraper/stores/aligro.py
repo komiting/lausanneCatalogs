@@ -27,8 +27,9 @@ FOOD_CATEGORIES = [
     "19-produits-de-base-condiments-conserves",
     "20-snacks-confiseries",
 ]
-PAGE = 192
-MAX_PAGES = 10
+PAGE = 96        # 192 items per page made Aligro answer 500 for the biggest categories
+SMALL_PAGE = 32  # second try when a page fails anyway
+MAX_PAGES = 24
 _DATES = re.compile(r"du\s+(\d{1,2})\.(\d{1,2})\.?\s+au\s+(\d{1,2})\.(\d{1,2})")
 _PIECES = re.compile(r"(\d+)\s*pi[èe]ces?")
 
@@ -40,6 +41,26 @@ class Aligro(Store):
     headers = {"Accept": "application/json, text/html;q=0.9", "Accept-Language": "fr-CH,fr;q=0.9"}
     delay = 1.0
     note = "Aligro javno prikazuje samo cene artikala na akciji (tržnica Chavannes)."
+
+    def _smaller_pages(self, cat: str, page_no: int) -> dict | None:
+        """A page that fails at PAGE items is fetched again in SMALL_PAGE slices."""
+        share = PAGE // SMALL_PAGE
+        items: list[dict] = []
+        total = 0
+        for i in range(share):
+            small_no = (page_no - 1) * share + i + 1
+            try:
+                block = (self.http.get(f"{BASE}/actions/{cat}.json",
+                                       params={"limit": SMALL_PAGE, "offset": small_no}).json().get("articles") or {})
+            except Exception:
+                return None if not items else {"articles": {"items": items, "total_items": total or len(items)}}
+            part = block.get("items") or []
+            total = block.get("total_items") or total
+            items.extend(part)
+            self.stats["small_pages"] = self.stats.get("small_pages", 0) + 1
+            if len(part) < SMALL_PAGE:
+                break
+        return {"articles": {"items": items, "total_items": total or len(items)}} if items else None
 
     def promotions(self) -> list[Offer]:
         try:
@@ -61,10 +82,12 @@ class Aligro(Store):
             for page_no in range(1, MAX_PAGES + 1):
                 try:
                     data = self.http.get(f"{BASE}/actions/{cat}.json", params={"limit": PAGE, "offset": page_no}).json()
-                except Exception as exc:  # one broken category must not sink the whole shop
-                    failed += 1
-                    self.warn(f"kategorija {cat}: {exc}")
-                    break
+                except Exception as exc:
+                    data = self._smaller_pages(cat, page_no)
+                    if data is None:  # one broken category must not sink the whole shop
+                        failed += 1
+                        self.warn(f"kategorija {cat}: {exc}")
+                        break
                 block = data.get("articles") or {}
                 items = block.get("items") or []
                 for item in items:
@@ -79,6 +102,8 @@ class Aligro(Store):
                     break
         if failed:
             self.stats["categories_failed"] = failed
+        if self.stats.get("small_pages"):
+            self.warn(f"{self.stats['small_pages']} stranica preuzeto u manjim delovima")
         if not offers:
             raise RuntimeError("nijedna kategorija akcija nije preuzeta")
         return list(offers.values())
