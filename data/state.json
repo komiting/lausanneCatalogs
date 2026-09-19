@@ -29,58 +29,64 @@
     "lidl": "ok",
     "migros": "ok"
    }
+  },
+  {
+   "date": "2026-09-19",
+   "stores": {
+    "aldi": "ok",
+    "aligro": "ok",
+    "coop": "ok",
+    "lidl": "ok",
+    "migros": "ok"
+   }
   }
  ],
  "stores": {
   "aldi": {
    "counts": {
-    "basket": 23,
-    "changes": 18,
-    "products": 2041,
-    "promos": 124
+    "basket": 24,
+    "changes": 6,
+    "products": 2038,
+    "promos": 120
    },
    "error": null,
-   "last_ok": "2026-09-18",
-   "last_run": "2026-09-18T09:13:03+00:00",
-   "prev_ok": "2026-09-16",
+   "last_ok": "2026-09-19",
+   "last_run": "2026-09-19T08:59:11+00:00",
+   "prev_ok": "2026-09-18",
    "requests": 40,
-   "seconds": 32.7,
+   "seconds": 40.5,
    "status": "ok",
    "warnings": []
   },
   "aligro": {
    "counts": {
-    "basket": 13,
-    "changes": 743,
-    "products": 743,
-    "promos": 743
+    "basket": 19,
+    "changes": 702,
+    "products": 1445,
+    "promos": 1445
    },
    "error": null,
-   "last_ok": "2026-09-18",
-   "last_run": "2026-09-18T09:16:39+00:00",
-   "prev_ok": "2026-09-16",
-   "requests": 18,
-   "seconds": 84.2,
-   "status": "partial",
-   "warnings": [
-    "kategorija 16-bieres-boissons-cafe-the: giving up on https://www.aligro.ch/actions/16-bieres-boissons-cafe-the.json: HTTP 500 for https://www.aligro.ch/actions/16-bieres-boissons-cafe-the.json",
-    "kategorija 19-produits-de-base-condiments-conserves: giving up on https://www.aligro.ch/actions/19-produits-de-base-condiments-conserves.json: HTTP 500 for https://www.aligro.ch/actions/19-produits-de-base-condiments-conserves.json",
-    "kategorija 20-snacks-confiseries: giving up on https://www.aligro.ch/actions/20-snacks-confiseries.json: HTTP 500 for https://www.aligro.ch/actions/20-snacks-confiseries.json"
-   ]
+   "last_ok": "2026-09-19",
+   "last_run": "2026-09-19T09:02:08+00:00",
+   "prev_ok": "2026-09-18",
+   "requests": 21,
+   "seconds": 47.0,
+   "status": "ok",
+   "warnings": []
   },
   "coop": {
    "counts": {
     "basket": 31,
-    "changes": 14,
-    "products": 1322,
-    "promos": 866
+    "changes": 73,
+    "products": 1383,
+    "promos": 927
    },
    "error": null,
-   "last_ok": "2026-09-18",
-   "last_run": "2026-09-18T09:15:09+00:00",
-   "prev_ok": "2026-09-16",
+   "last_ok": "2026-09-19",
+   "last_run": "2026-09-19T09:01:16+00:00",
+   "prev_ok": "2026-09-18",
    "requests": 55,
-   "seconds": 82.2,
+   "seconds": 81.1,
    "status": "ok",
    "warnings": []
   },
@@ -92,11 +98,11 @@
     "promos": 194
    },
    "error": null,
-   "last_ok": "2026-09-18",
-   "last_run": "2026-09-18T09:15:14+00:00",
-   "prev_ok": "2026-09-16",
+   "last_ok": "2026-09-19",
+   "last_run": "2026-09-19T09:01:21+00:00",
+   "prev_ok": "2026-09-18",
    "requests": 10,
-   "seconds": 5.6,
+   "seconds": 4.8,
    "status": "ok",
    "warnings": []
   },
@@ -104,15 +110,15 @@
    "counts": {
     "basket": 31,
     "changes": 3,
-    "products": 404,
+    "products": 406,
     "promos": 67
    },
    "error": null,
-   "last_ok": "2026-09-18",
-   "last_run": "2026-09-18T09:13:47+00:00",
-   "prev_ok": "2026-09-16",
+   "last_ok": "2026-09-19",
+   "last_run": "2026-09-19T08:59:55+00:00",
+   "prev_ok": "2026-09-18",
    "requests": 73,
-   "seconds": 43.4,
+   "seconds": 43.7,
    "status": "ok",
    "warnings": []
   }
