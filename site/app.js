@@ -8,7 +8,7 @@
   const state = {
     meta: null, basket: null, promos: null, index: null, history: {},
     view: "korpa", open: new Set(),
-    promo: { q: "", stores: new Set(), sort: "pct", min: 0, group: "", soon: false, limit: 60 },
+    promo: { q: "", stores: new Set(), sort: "pct", min: 0, group: "", frozen: "", soon: false, limit: 60 },
     prod: { q: "", stores: new Set(), promoOnly: false, limit: 80 },
     chartMode: {},
   };
@@ -497,9 +497,18 @@
   }
 
   // ── promotions ────────────────────────────────────────────────────────
-  const GROUPS = [
-    ["meso", "Meso i riba — sveže", /viande|volaille|boeuf|porc|poulet|veau|agneau|charcuterie|saucisse|jambon|poisson|saumon|thon|crevette|fruits de mer|cabillaud|lapin|dinde|canard|steak|hache/],
-    ["meso-smrz", "Meso i riba — smrznuto", null],
+  // Meat is split by animal. The product name (French + Serbian) decides; the shop category
+  // only helps when it names a single animal ("Viande de porc emballée", not "Viandes & poissons").
+  const MEAT = [
+    ["riba", "Riba i morski plodovi", /poisson|saumon|\bthon|cabillaud|truite|crevette|fruits de mer|merlu|colin|sardine|maquereau|moule|calamar|seiche|poulpe|pesce|lachs|scampi|limande|carrelet|\bsole\b|dorade|loup de mer|perche|\blieu\b|hareng|anchois|surimi|gambas|langoustine|saint-jacques|pangasius|tilapia|omble|brochet|espadon|\briba\b|\bribe\b|\bribl|\blosos|\btunjevin|\btuna\b|\bbakalar|\bskamp|\boslic|\bpastrmk|\bharing|\bsardin|\blignj|\bdagnj|\bskus|\bpangasij|\bsmudj|\borad|\bbrancin|\bsip[ae]\b|\bhobotnic|\bkozic|\brakov/],
+    ["piletina", "Piletina i živina", /poulet|volaille|dinde|poularde|pollo|chicken|canard|caille|pintade|coquelet|\bpoule\b|\bpilec|\bpiletin|\bpilic|\bcuret|\bcurec|\bpacj|\bpatk|\bprepelic/],
+    ["junetina", "Junetina i teletina", /boeuf|\bveau\b|entrecote|rumsteak|rumsteck|angus|bresaola|manzo|\brind|vitello|\bbeef|charolais|viande sechee|\bjunet|\bjunec|\bgoved|\btelet|\btelec|\bramstek|\bbiftek/],
+    ["svinjetina", "Svinjetina", /\bporc|cochon|jambon|\blard|lardons|salami|salametti|chorizo|coppa|prosciutto|speck|pancetta|maiale|schwein|saucisson|mortadelle|cervelas|\bsvinj|\bslanin|\bsunk|\bpancet|\bprsut|\bkulen/],
+    ["meso", "Ostalo meso", /viande|agneau|gibier|cerf|chevreuil|sanglier|lapin|cheval|charcuterie|saucisse|steak|hache|cordon bleu|kebab|burger|\bjagnjet|\bjagnjec|\bdivljac|\bjelen|\bsrnet|\bzec|\bkonjsk|\bmeso|\bmesn|\bkobasic|\bvirsl|\bcevap|\bpljeskavic|\bcufte/],
+  ];
+  // ready meals, sauces, snacks and vegetarian products that merely mention meat belong elsewhere
+  const NOT_MEAT = /pizza|sauce|sugo|mayo|chips|soupe|bouillon|lasagne|raviol|tortell|sandwich|wrap|nourriture|\bpates|nouille|quiche|tarte|\bchat\b|chien|croissant|vegetar|vegan|veggie|vegetal|\bsos\b|\bpica\b|cips|\bsupa\b|corba|lazanj|sendvic|testenin|hrana za|keks|kreker|namaz|kroasan|povrtn|biljn/;
+  const OTHER_GROUPS = [
     ["mlecni", "Mlečni i jaja", /lait|fromage|yog|yaourt|beurre|creme|oeuf|sere|quark|skyr|mozzarella|gruyere|emmental|laitier/],
     ["voce", "Voće i povrće", /fruit|legume|pomme|banane|tomate|salade|carotte|oignon|poivron|courgette|raisin|orange|citron|poire|baies|fraise|champignon|avocat|brocoli|chou|melon|kiwi|mangue|ananas|potimarron|courge|epinard/],
     ["pekara", "Hleb i doručak", /pain|boulang|patisser|croissant|toast|cereale|muesli|flocon|confiture|miel|brioche|tresse/],
@@ -507,11 +516,17 @@
     ["pice", "Piće i kafa", /boisson|biere|vin|cafe|the\b|jus|eau|sirop|limonade|soda|energ/],
     ["slatkisi", "Slatkiši i grickalice", /chocolat|biscuit|snack|chips|bonbon|confiserie|glace|dessert|friandise|noix|amande|cacahuete/],
   ];
+  const GROUPS = [...MEAT, ...OTHER_GROUPS].map(([key, label]) => [key, label]);
   function promoGroup(p) {
-    const t = fold(`${p.c || ""} ${p.n}`);
-    for (const [key, , rx] of GROUPS) {
-      if (rx && rx.test(t)) return key === "meso" && p.fz ? "meso-smrz" : key;
+    const name = fold(`${p.n} ${p.sr || ""}`);
+    if (!NOT_MEAT.test(name)) {
+      for (const [key, , rx] of MEAT) if (rx.test(name)) return key;
+      const cat = fold(p.c || "");
+      const hits = MEAT.slice(0, 4).filter(([, , rx]) => rx.test(cat));
+      if (hits.length === 1) return hits[0][0];
     }
+    const t = fold(`${p.c || ""} ${p.n} ${p.sr || ""}`);
+    for (const [key, , rx] of OTHER_GROUPS) if (rx.test(t)) return key;
     return "ostalo";
   }
 
@@ -524,6 +539,8 @@
       if (f.stores.size && !f.stores.has(p.st)) return false;
       if (f.min && (p.pct || 0) < f.min) return false;
       if (f.group && (p._g || (p._g = promoGroup(p))) !== f.group) return false;
+      if (f.frozen === "fresh" && p.fz) return false;
+      if (f.frozen === "frozen" && !p.fz) return false;
       if (words.length) {
         const t = p._t || (p._t = fold(`${p.n} ${p.sr || ""} ${p.b || ""} ${p.c || ""}`));
         if (!words.every((w) => t.includes(w))) return false;
@@ -553,7 +570,7 @@
       fill(results, 
         list.length ? h("div", { class: "cards" }, shown.map(promoCard)) : h("div", { class: "empty", text: "Nijedna akcija ne odgovara filterima." }),
         list.length > f.limit ? h("div", { class: "more" }, h("button", { class: "btn ghost", type: "button", onclick: () => { f.limit += 60; redraw(); } }, `Prikaži još (${list.length - f.limit})`)) : null);
-      store.set("promo", { sort: f.sort, min: f.min, group: f.group, soon: f.soon });
+      store.set("promo", { sort: f.sort, min: f.min, group: f.group, frozen: f.frozen, soon: f.soon });
     };
     const search = h("label", { class: "search" },
       h("span", { class: "sr-only", text: "Pretraga akcija" }),
@@ -571,6 +588,7 @@
     const filters = h("div", { class: "filters" },
       search, chips,
       select("promo-group", "Grupa", f.group, [["", "Sve grupe"], ...GROUPS.map(([k, t]) => [k, t]), ["ostalo", "Ostalo"]], (v) => { f.group = v; }),
+      select("promo-frozen", "Sveže ili smrznuto", f.frozen, [["", "Sveže i smrznuto"], ["fresh", "Samo sveže"], ["frozen", "Samo smrznuto"]], (v) => { f.frozen = v; }),
       select("promo-min", "Najmanji popust", f.min, [[0, "Svaki popust"], [20, "Bar 20 %"], [30, "Bar 30 %"], [40, "Bar 40 %"], [50, "Bar 50 %"]], (v) => { f.min = +v; }),
       select("promo-sort", "Sortiranje", f.sort, [["pct", "Najveći popust"], ["saving", "Najveća ušteda (CHF)"], ["unit", "Najniža cena po jedinici"], ["price", "Najniža cena"], ["name", "Po nazivu"]], (v) => { f.sort = v; }),
       h("label", { class: "check" }, h("input", { id: "promo-soon", type: "checkbox", checked: f.soon, onchange: (e) => { f.soon = e.target.checked; f.limit = 60; redraw(); } }), "i akcije koje tek počinju"));
@@ -838,7 +856,7 @@
       return;
     }
     const saved = store.get("promo", null);
-    if (saved) Object.assign(state.promo, { sort: saved.sort || "pct", min: saved.min || 0, group: saved.group || "", soon: !!saved.soon });
+    if (saved) Object.assign(state.promo, { sort: saved.sort || "pct", min: saved.min || 0, group: saved.group === "meso-smrz" ? "" : saved.group || "", frozen: saved.frozen || "", soon: !!saved.soon });
     updateHeader();
     window.addEventListener("hashchange", route);
     document.getElementById("sheet").addEventListener("click", (e) => { if (e.target.id === "sheet") e.target.close(); });
