@@ -14,6 +14,14 @@ PET_WORDS = re.compile(
 )
 
 
+# "surgelé", "congelé", "Rayon surgelés", "tiefgekühlt" … but not "décongelé" (thawed, sold chilled)
+FROZEN_WORDS = re.compile(r"\b(?:surgel\w*|congel\w*|tiefgek\w*|tiefk\w*|surgelat\w*|frozen)\b")
+
+
+def looks_frozen(*texts: str | None) -> bool:
+    return bool(FROZEN_WORDS.search(fold(" ".join(t for t in texts if t))))
+
+
 def looks_like_pet_food(*texts: str | None) -> bool:
     return bool(PET_WORDS.search(fold(" ".join(t for t in texts if t))))
 
@@ -40,6 +48,7 @@ class Offer:
     url: str | None = None
     image: str | None = None
     extra: dict[str, Any] = field(default_factory=dict)
+    frozen: bool = False                # frozen food (from the name or the shop's category)
 
     def __post_init__(self) -> None:
         self.name = " ".join((self.name or "").split())
@@ -47,6 +56,8 @@ class Offer:
             self.regular_price = self.price
         if self.food is not False and looks_like_pet_food(self.brand, self.name):
             self.food = False
+        if not self.frozen and looks_frozen(self.name, self.category):
+            self.frozen = True
 
     # ── prices ──────────────────────────────────────────────────────────
     @property
@@ -135,4 +146,6 @@ class Offer:
             out["url"] = self.url
         if self.image:
             out["img"] = self.image
+        if self.frozen:
+            out["fz"] = 1
         return out

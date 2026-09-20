@@ -16,6 +16,8 @@
   --accent-soft: #dcefe9;
   --sticker: #ffd21f;
   --pic-bg: #ffffff;
+  --frz: #1f5f99;
+  --frz-soft: #e3eef8;
   --sticker-ink: #1d1600;
   --warn: #9a5b00;
   --bad: #b3261e;
@@ -48,6 +50,8 @@
     --accent-ink: #06231e;
     --accent-soft: #163631;
     --pic-bg: #eef1f0;
+    --frz: #8cc4f2;
+    --frz-soft: #16283a;
     --warn: #f0a93b;
     --bad: #ff8a80;
     --ok: #4cc27a;
@@ -75,6 +79,8 @@
   --accent-ink: #06231e;
   --accent-soft: #163631;
   --pic-bg: #eef1f0;
+  --frz: #8cc4f2;
+  --frz-soft: #16283a;
   --warn: #f0a93b;
   --bad: #ff8a80;
   --ok: #4cc27a;
@@ -320,6 +326,9 @@ select {
 .card h4 button { all: unset; cursor: pointer; }
 .card h4 button:hover { text-decoration: underline; }
 .card h4 button:focus-visible { outline: 2px solid var(--accent); }
+.frz { display: inline-block; font-size: 11px; font-weight: 600; line-height: 1.5; padding: 0 6px; border-radius: 999px;
+  color: var(--frz); background: var(--frz-soft); margin-left: 6px; white-space: nowrap; }
+.cand .p .frz { margin: 0 6px 0 0; vertical-align: 1px; }
 .card .orig { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
 .card .sub { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
 .card .pr { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; }

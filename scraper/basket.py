@@ -45,6 +45,7 @@ class BasketItem:
     max_qty: float | None = None
     density: float | None = None
     note: str | None = None
+    frozen: str = "any"            # "no" = fresh only, "only" = frozen only, "any"
 
     def queries_for(self, store: str) -> list[str]:
         q = self.queries.get(store)
@@ -54,6 +55,8 @@ class BasketItem:
 
     def matches(self, offer: Offer) -> bool:
         if offer.food is False:
+            return False
+        if (self.frozen == "no" and offer.frozen) or (self.frozen == "only" and not offer.frozen):
             return False
         text = fold(f"{offer.brand or ''} {offer.name}")
         if not all(rx.search(text) for rx in self.include):
@@ -116,5 +119,19 @@ def load_basket(path: Path | None = None) -> list[BasketItem]:
             max_qty=raw.get("max_qty"),
             density=raw.get("density"),
             note=raw.get("note"),
+            frozen=_frozen_rule(raw),
         ))
     return items
+
+
+# meat, fish and fresh produce compare fresh products only, unless the item says otherwise
+FRESH_BY_DEFAULT = {"Meso i riba", "Voće i povrće"}
+
+
+def _frozen_rule(raw: dict) -> str:
+    rule = raw.get("frozen")
+    if rule is None:
+        return "no" if raw.get("group") in FRESH_BY_DEFAULT else "any"
+    if rule not in ("no", "only", "any"):
+        raise ValueError(f"{raw['id']}: frozen must be no, only or any")
+    return rule

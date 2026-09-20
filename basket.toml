@@ -29,6 +29,19 @@ exclude = "pane|nugget|cordon|fume|epice|marine|kebab|sauce|salade|sandwich|wrap
 min_qty = 0.2
 
 [[item]]
+id = "pileca-prsa-smrznuta"
+name = "Pileća prsa (smrznuta)"
+group = "Meso i riba"
+unit = "kg"
+query = "poitrine de poulet"
+queries = { coop = ["poitrine de poulet", "blanc de poulet"] }
+include = ["poulet|chicken|poularde", "poitrine|blanc|filet|emince|escalope|brust"]
+exclude = "pane|nugget|cordon|fume|epice|marine|kebab|sauce|salade|sandwich|wrap|jambon|saucisse|hache|bouillon|chat|chien|curry|tikka|pizza|croquette|chips|tranche|charcuterie|grill|bbq|tandoori|soupe|lasagne|nouille|\\briz\\b|cuit|roti|chasseur|cornet|strips|crispy|croustillant|aile|cuisse|poivre"
+min_qty = 0.2
+frozen = "only"
+note = "Isto kao pileća prsa, ali samo smrznuta pakovanja."
+
+[[item]]
 id = "pileci-bataci"
 name = "Pileći bataci"
 group = "Meso i riba"

@@ -10,6 +10,7 @@ from typing import Any
 
 from .basket import BasketItem, load_basket
 from .storage import DataStore, last_seen, resolved_spans
+from .models import looks_frozen
 from .translate import Translations
 from .stores import STORES
 
@@ -22,6 +23,12 @@ def _dump(path: Path, data: Any) -> int:
     text = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
     path.write_text(text, encoding="utf-8")
     return len(text)
+
+
+def _mark_frozen(p: dict[str, Any]) -> dict[str, Any]:
+    if not p.get("fz") and looks_frozen(p.get("n"), p.get("c")):
+        p["fz"] = 1
+    return p
 
 
 def _float(s: str | None) -> float | None:
@@ -80,7 +87,9 @@ def build(data_dir: Path = Path("data"), site_dir: Path = Path("site"), basket: 
             snap = latest.get(key)
             if not snap:
                 continue
-            cands = (snap.get("basket") or {}).get(it.id) or []
+            cands = [_mark_frozen(dict(c)) for c in (snap.get("basket") or {}).get(it.id) or []]
+            # snapshots taken before the fresh/frozen split may still hold the other kind
+            cands = [c for c in cands if not ((it.frozen == "no" and c.get("fz")) or (it.frozen == "only" and not c.get("fz")))]
             now[key] = {"date": snap["date"], "cands": cands}
         items.append({
             "id": it.id, "name": it.name, "group": it.group, "unit": it.unit, "note": it.note,
@@ -98,7 +107,7 @@ def build(data_dir: Path = Path("data"), site_dir: Path = Path("site"), basket: 
         if not snap:
             continue
         for p in snap.get("promos") or []:
-            p = dict(p)
+            p = _mark_frozen(dict(p))
             p["st"] = key
             p["d"] = snap["date"]
             sr, approx = names.lookup(p.get("n"))

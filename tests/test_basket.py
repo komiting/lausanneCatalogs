@@ -83,3 +83,18 @@ def test_coop_fixture_ranking(basket):
     offers = [parse_product(p) for p in load("coop_products.json")["products"]]
     ranked = basket["mleko"].rank(offers)
     assert ranked[0].offer.pid == "3081654"  # 1.90/l beats 1.95/l
+
+
+def test_fresh_and_frozen_are_kept_apart():
+    from scraper.basket import load_basket
+    from scraper.models import Offer
+    from scraper.units import Size
+    items = {i.id: i for i in load_basket()}
+    fresh = Offer("coop", "1", "Poitrines de poulet", 12.0, size=Size({"kg": 1.0}), category="Volaille fraîche")
+    frozen = Offer("coop", "2", "Poitrines de poulet", 9.0, size=Size({"kg": 1.0}), category="Produits à base de viande surgelée")
+    thawed = Offer("coop", "3", "Crevettes cuites, décongelées", 5.0, size=Size({"kg": 0.2}))
+    assert frozen.frozen and not fresh.frozen and not thawed.frozen
+    assert frozen.to_dict()["fz"] == 1 and "fz" not in fresh.to_dict()
+    assert items["pileca-prsa"].matches(fresh) and not items["pileca-prsa"].matches(frozen)
+    assert items["pileca-prsa-smrznuta"].matches(frozen) and not items["pileca-prsa-smrznuta"].matches(fresh)
+    assert items["pileca-prsa"].rank([fresh, frozen])[0].offer is fresh

@@ -482,6 +482,8 @@
       h("div", { class: "detail-grid" }, chart, lists));
   }
 
+  const frozenChip = (p) => (p && p.fz ? h("span", { class: "frz", title: "Smrznut proizvod", text: "❄ smrznuto" }) : null);
+
   function candRow(k, c, unit) {
     const name = c.url ? h("a", { href: c.url, target: "_blank", rel: "noopener", text: c.n }) : h("span", { text: c.n });
     const open = () => openProduct(k, c.id);
@@ -490,13 +492,14 @@
         h("button", { type: "button", class: "linkish", onclick: open, style: "border:0;background:none;padding:0;color:var(--accent);cursor:pointer;font-size:12px" }, "istorija"))),
       h("div", { class: "p" },
         c.r && c.pr ? h("span", { class: "old", text: money(c.r) }) : null,
-        h("b", { text: money(c.p) }), " ", sticker(c),
+        frozenChip(c), h("b", { text: money(c.p) }), " ", sticker(c),
         h("div", { class: "s", text: `${money(c.iu)} CHF/${unitLabel(unit)}${c.ax ? " (približno)" : ""}` })));
   }
 
   // ── promotions ────────────────────────────────────────────────────────
   const GROUPS = [
-    ["meso", "Meso i riba", /viande|volaille|boeuf|porc|poulet|veau|agneau|charcuterie|saucisse|jambon|poisson|saumon|thon|crevette|fruits de mer|cabillaud|lapin|dinde|canard|steak|hache/],
+    ["meso", "Meso i riba — sveže", /viande|volaille|boeuf|porc|poulet|veau|agneau|charcuterie|saucisse|jambon|poisson|saumon|thon|crevette|fruits de mer|cabillaud|lapin|dinde|canard|steak|hache/],
+    ["meso-smrz", "Meso i riba — smrznuto", null],
     ["mlecni", "Mlečni i jaja", /lait|fromage|yog|yaourt|beurre|creme|oeuf|sere|quark|skyr|mozzarella|gruyere|emmental|laitier/],
     ["voce", "Voće i povrće", /fruit|legume|pomme|banane|tomate|salade|carotte|oignon|poivron|courgette|raisin|orange|citron|poire|baies|fraise|champignon|avocat|brocoli|chou|melon|kiwi|mangue|ananas|potimarron|courge|epinard/],
     ["pekara", "Hleb i doručak", /pain|boulang|patisser|croissant|toast|cereale|muesli|flocon|confiture|miel|brioche|tresse/],
@@ -506,7 +509,9 @@
   ];
   function promoGroup(p) {
     const t = fold(`${p.c || ""} ${p.n}`);
-    for (const [key, , rx] of GROUPS) if (rx.test(t)) return key;
+    for (const [key, , rx] of GROUPS) {
+      if (rx && rx.test(t)) return key === "meso" && p.fz ? "meso-smrz" : key;
+    }
     return "ostalo";
   }
 
@@ -582,7 +587,7 @@
     const until = p.soon ? (p.from ? `od ${fmtDate(p.from)}` : "uskoro") : p.to ? `važi do ${fmtDate(p.to)}` : "";
     const pic = !window.LP_NO_IMAGES;
     return h("article", { class: pic ? "card has-pic" : "card" },
-      h("div", { class: "top" }, h("span", { class: "st" }, swatch(p.st, "dot"), storeName(p.st)), sticker(p)),
+      h("div", { class: "top" }, h("span", { class: "st" }, swatch(p.st, "dot"), storeName(p.st), frozenChip(p)), sticker(p)),
       pic ? h("div", { class: "pic" }, img) : null,
       h("div", null,
         h("h4", null, h("button", {
