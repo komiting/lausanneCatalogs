@@ -813,8 +813,157 @@
     document.getElementById("promo-count").textContent = active ? String(active) : "";
   }
 
-  const VIEWS = { korpa: renderKorpa, akcije: renderAkcije, proizvodi: renderProizvodi, "o-sajtu": renderAbout };
+
+  // ── my shopping list ──────────────────────────────────────────────────
+  // Serbian word stems → what to look for in Serbian and French product names
+  const LIST_SYNONYMS = [
+    [/^(pile|piletin|pilec|pilic)/, ["pilet", "pilec", "pilic", "poulet", "volaille"]],
+    [/^svinj/, ["svinj", "porc"]],
+    [/^(junet|junec|goved)/, ["junet", "junec", "goved", "boeuf"]],
+    [/^(telet|telec)/, ["telet", "telec", "veau"]],
+    [/^(curet|curec)/, ["curet", "curec", "dinde"]],
+    [/^rib[aeu]?$/, ["riba", "ribe", "ribl", "poisson"]],
+    [/^losos/, ["losos", "saumon"]],
+    [/^(tuna|tunjevin)/, ["tunjevin", "tuna\\b", "thon"]],
+    [/^(mlek|mlec)/, ["mlek", "lait"]],
+    [/^jaj/, ["jaj", "oeuf"]],
+    [/^hleb/, ["hleb", "pain"]],
+    [/^jogurt/, ["jogurt", "yog"]],
+    [/^pirin/, ["pirin", "riz\\b"]],
+    [/^(testen|pasta|paste)/, ["testenin", "pates", "pasta"]],
+    [/^krompir/, ["krompir", "pommes? de terre"]],
+    [/^paradajz/, ["paradajz", "tomate"]],
+    [/^luk/, ["luk\\b", "luka\\b", "oignon"]],
+    [/^banan/, ["banan"]],
+    [/^jabuk/, ["jabuk", "pommes?\\b"]],
+    [/^(maslac|puter$)/, ["maslac", "beurre\\b"]],
+    [/^sir(a|om)?$/, ["sir\\b", "sira\\b", "sirom\\b", "fromage"]],
+    [/^kaf[aeu]/, ["kafa\\b", "kafe\\b", "kafu\\b", "cafe\\b"]],
+    [/^ulj/, ["ulj", "huile"]],
+    [/^secer/, ["secer", "sucre"]],
+    [/^brasn/, ["brasn", "farine"]],
+    [/^ovsen/, ["ovsen", "avoine"]],
+  ];
+  const LIST_STOP = new Set(["i", "za", "sa", "od", "kg", "g", "gr", "l", "dl", "ml", "kom", "komad", "komada", "pak", "pakovanje"]);
+  function listMatcher(line) {
+    const words = fold(line).split(/[^a-z0-9]+/).filter((w) => w.length >= 2 && !LIST_STOP.has(w) && !/^\d+$/.test(w));
+    if (!words.length) return null;
+    const rxs = words.map((w) => {
+      for (const [test, alts] of LIST_SYNONYMS) if (test.test(w)) return new RegExp(`\\b(?:${alts.join("|")})`);
+      return new RegExp(`\\b${w.length >= 5 ? w.slice(0, w.length - 2) : w}`);
+    });
+    return (text) => rxs.every((rx) => rx.test(text));
+  }
+  function basketRules(it) {
+    if (!it._rules) {
+      it._rules = { inc: (it.inc || []).map((s) => new RegExp(s)), exc: it.exc ? new RegExp(it.exc) : null };
+    }
+    return it._rules;
+  }
+  function listLine(line) {
+    const m = listMatcher(line);
+    if (!m) return null;
+    const items = state.basket.items.filter((it) => m(fold(`${it.name} ${it.id.replace(/-/g, " ")}`)));
+    // 1) the basket's own rules are precise ("mleko" = milk, not yogurt or chocolate)
+    const byRules = state.promos.filter((p) => {
+      if (p.soon || !items.length) return false;
+      const text = fold(`${p.b || ""} ${p.n}`);
+      return items.some((it) => {
+        const r = basketRules(it);
+        return p.u === it.unit && r.inc.length && r.inc.every((rx) => rx.test(text)) && !(r.exc && r.exc.test(text));
+      });
+    });
+    // 2) otherwise the start of the Serbian name has to match ("Pileći vrat" yes, "Kocke za pileću supu" no)
+    const seen = new Set(byRules.map((p) => `${p.st}/${p.id}`));
+    const byName = state.promos.filter((p) => {
+      if (p.soon || seen.has(`${p.st}/${p.id}`)) return false;
+      const head = p._lh || (p._lh = fold(p.sr || p.n).split(/[^a-z0-9]+/).filter(Boolean).slice(0, 2).join(" "));
+      return m(head);
+    });
+    const promos = [...byRules, ...byName];
+    const units = {};
+    for (const p of promos) if (p.u) units[p.u] = (units[p.u] || 0) + 1;
+    const unit = Object.keys(units).sort((a, b) => units[b] - units[a])[0];
+    promos.sort((a, b) => ((a.u === unit ? 0 : 1) - (b.u === unit ? 0 : 1)) || ((a.u === unit ? a.up : a.p) ?? 1e9) - ((b.u === unit ? b.up : b.p) ?? 1e9));
+    return { line, items, promos, unit };
+  }
+  function listPromoRow(p) {
+    const until = p.to ? `do ${fmtDate(p.to)}` : "";
+    return h("div", { class: "li-row" },
+      h("span", { class: "st" }, swatch(p.st, "dot"), storeName(p.st)),
+      h("div", { class: "li-name" },
+        h("button", { type: "button", class: "linkish", onclick: () => openProduct(p.st, p.id, p.sr), text: p.sr || p.n }),
+        frozenChip(p),
+        h("div", { class: "s", text: [p.sr ? p.n : null, p.s, until].filter(Boolean).join(" · ") })),
+      h("div", { class: "li-price" },
+        h("div", null, p.r && p.r > p.p ? h("span", { class: "old", text: money(p.r) }) : null, " ", h("b", { text: money(p.p) }), " ", sticker(p, true)),
+        p.up ? h("div", { class: "s", text: `${money(p.up)} CHF/${unitLabel(p.u)}` }) : null));
+  }
+  function listBasketRow(it) {
+    const best = bestNow(it);
+    return h("a", { class: "li-basket", href: `#korpa/${encodeURIComponent(it.id)}` },
+      h("span", { class: "k", text: it.name }),
+      best
+        ? h("span", null, "najjeftinije ", h("b", { text: `${money(best.c.iu)} CHF/${unitLabel(it.unit)}` }), ` · ${[...best.ties].map(storeName).join(", ")}`)
+        : h("span", { class: "muted", text: "nema cena" }),
+      h("span", { class: "go", text: "korpa →" }));
+  }
+  function readSharedList() {
+    const hash = location.hash || "";
+    if (!hash.startsWith("#lista=")) return;
+    try {
+      store.set("lista", decodeURIComponent(hash.slice(7)));
+    } catch { /* malformed link: keep the saved list */ }
+    history.replaceState(null, "", "#lista");
+  }
+  async function renderLista() {
+    const text = store.get("lista", "");
+    const results = h("div", { class: "li-results" });
+    const summary = h("p", { class: "resinfo", "aria-live": "polite" });
+    let timer = null;
+    const redraw = (value) => {
+      const lines = value.split(/\n|,/).map((s) => s.trim()).filter(Boolean);
+      const found = lines.map(listLine).filter(Boolean);
+      const perStore = {};
+      for (const f of found) for (const k of new Set(f.promos.map((p) => p.st))) perStore[k] = (perStore[k] || 0) + 1;
+      const order = state.meta.order.filter((k) => perStore[k]).sort((a, b) => perStore[b] - perStore[a]);
+      summary.textContent = !found.length ? ""
+        : order.length ? `Akcije za tvoju listu: ${order.map((k) => `${storeName(k)} ${perStore[k]}`).join(" · ")} (broj stavki sa bar jednom akcijom)`
+        : "Trenutno nema akcija ni za jednu stavku sa liste.";
+      fill(results, found.length ? found.map((f) => h("section", { class: "li" },
+        h("h3", null, f.line, h("span", { class: "muted", text: ` · ${f.promos.length} ${plural(f.promos.length, "akcija", "akcije", "akcija")}` })),
+        f.items.length ? h("div", { class: "li-baskets" }, f.items.map(listBasketRow)) : null,
+        f.promos.length
+          ? h("div", { class: "li-promos" }, f.promos.slice(0, 3).map(listPromoRow),
+            f.promos.length > 3 ? h("button", { type: "button", class: "more-link", onclick: () => { state.promo.q = f.line; state.promo.limit = 60; location.hash = "#akcije"; }, text: `Sve akcije (${f.promos.length}) →` }) : null)
+          : h("p", { class: "muted", text: "Trenutno nema akcija za ovu stavku." }),
+        !f.items.length && !f.promos.length ? h("button", { type: "button", class: "more-link", onclick: () => { state.prod.q = f.line; location.hash = "#proizvodi"; }, text: "Potraži u istoriji cena →" }) : null))
+        : h("p", { class: "muted", text: "Upiši šta kupuješ — po jednu stavku u redu (npr. piletina, mleko, jaja, pirinač)." }));
+    };
+    const area = h("textarea", {
+      id: "lista-text", rows: 6, spellcheck: "false", placeholder: "piletina\nmleko\njaja\npirinač\nbanane",
+      oninput: (e) => { const v = e.target.value; store.set("lista", v); clearTimeout(timer); timer = setTimeout(() => redraw(v), 250); },
+    });
+    area.value = text;
+    const shareNote = h("span", { class: "muted", "aria-live": "polite" });
+    const share = h("button", { type: "button", class: "btn", onclick: async () => {
+      const url = `${location.origin}${location.pathname}#lista=${encodeURIComponent(area.value)}`;
+      try { await navigator.clipboard.writeText(url); shareNote.textContent = "Link kopiran — otvori ga na telefonu i lista se prenosi."; }
+      catch { shareNote.textContent = url; }
+    }, text: "Kopiraj link liste" });
+    fill($app, h("div", null,
+      h("div", { class: "view-head" },
+        h("h2", { text: "Moja lista" }),
+        h("p", { text: "Za svaku stavku: gde je najjeftinija u korpi i koje akcije trenutno važe. Lista se čuva samo na ovom uređaju." })),
+      h("div", { class: "li-editor" }, h("label", { for: "lista-text", class: "sr-only", text: "Lista za kupovinu" }), area,
+        h("div", { class: "li-actions" }, share, shareNote)),
+      summary, results));
+    redraw(text);
+  }
+
+  const VIEWS = { korpa: renderKorpa, lista: renderLista, akcije: renderAkcije, proizvodi: renderProizvodi, "o-sajtu": renderAbout };
   async function route() {
+    readSharedList();
     const hash = (location.hash || "").replace(/^#/, "");
     const [view, ...rest] = hash.split("/");
     if (view === "proizvod" && rest.length === 2) {

@@ -93,6 +93,7 @@ def build(data_dir: Path = Path("data"), site_dir: Path = Path("site"), basket: 
             now[key] = {"date": snap["date"], "cands": cands}
         items.append({
             "id": it.id, "name": it.name, "group": it.group, "unit": it.unit, "note": it.note,
+            "inc": [rx.pattern for rx in it.include], "exc": it.exclude.pattern if it.exclude else None,
             "now": now,
             "hist": {k: v for k, v in series[it.id].items() if any(x is not None for x in v)},
             "promo": {k: v for k, v in promo_flags[it.id].items() if any(v)},
