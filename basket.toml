@@ -155,7 +155,7 @@ unit = "kg"
 query = "beurre"
 queries = { coop = ["beurre de cuisine", "beurre"] }
 include = ["beurre|butter"]
-exclude = "cacahuete|arachide|amande|noisette|croissant|biscuit|sauce|\\bail\\b|herbes|cookie|tresse|pate|cacao|karite|corps|brezel|bretzel|creme au|a la creme|petit|pain|gateau|sable|galette|caramel|cafe|escargot|margarine|vegan|vegetal|plante|allege|light|ghee|clarifie|concentre|a tartiner|tartinable|sel de|fleur de sel|truffe|miel|chocolat|peanut|erdnuss|mandel|nuss|brioche|kouign|tourte|fondant|pomme|poire|lait battu|babeurre|buttermilch|buttermilk|rosti|fondu|cookies|poulet|fish|poisson|stollen|colza|huile|arome|steak|porc|gaufrette|au beurre|chicken"
+exclude = "butternut|courge|keks|cacahuete|arachide|amande|noisette|croissant|biscuit|sauce|\\bail\\b|herbes|cookie|tresse|pate|cacao|karite|corps|brezel|bretzel|creme au|a la creme|petit|pain|gateau|sable|galette|caramel|cafe|escargot|margarine|vegan|vegetal|plante|allege|light|ghee|clarifie|concentre|a tartiner|tartinable|sel de|fleur de sel|truffe|miel|chocolat|peanut|erdnuss|mandel|nuss|brioche|kouign|tourte|fondant|pomme|poire|lait battu|babeurre|buttermilch|buttermilk|rosti|fondu|cookies|poulet|fish|poisson|stollen|colza|huile|arome|steak|porc|gaufrette|au beurre|chicken"
 min_qty = 0.1
 
 [[item]]
@@ -280,7 +280,7 @@ group = "Voće i povrće"
 unit = "kg"
 query = "oignons"
 include = ["oignon|zwiebel"]
-exclude = "\\bfrit|rings|soupe|confit|poudre|seche|sauce|chips|marine|tarte|creme|pain|\\bdip\\b|epice|croustillant|grille|surgel|\\bail\\b|printemps|botte|nouveau|jeune|cebette|ciboulette|echalote|grelot|cocktail|vinaigre|pickles|bouillon|mix|legume|pomme|carotte|poireau|poivron|tomate|chip|snack|crackers|saucisse|steak|foie|burger|hachis|pizza|quiche|flammekueche|biscuit|salade|pickled|bretzel|miel|moutarde|fromage|herbes|houmous|caramelise|argente|brunoise|en des|lamelles|emince"
+exclude = "chevre|girasoli|pates|\\bfrit|rings|soupe|confit|poudre|seche|sauce|chips|marine|tarte|creme|pain|\\bdip\\b|epice|croustillant|grille|surgel|\\bail\\b|printemps|botte|nouveau|jeune|cebette|ciboulette|echalote|grelot|cocktail|vinaigre|pickles|bouillon|mix|legume|pomme|carotte|poireau|poivron|tomate|chip|snack|crackers|saucisse|steak|foie|burger|hachis|pizza|quiche|flammekueche|biscuit|salade|pickled|bretzel|miel|moutarde|fromage|herbes|houmous|caramelise|argente|brunoise|en des|lamelles|emince"
 min_qty = 0.5
 
 [[item]]
