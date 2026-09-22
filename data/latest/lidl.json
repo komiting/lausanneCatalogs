@@ -1,5 +1,5 @@
 {
-"date":"2026-09-21",
+"date":"2026-09-22",
 "stats":{
 "campaigns_skipped":16,
 "details_fetched":0
@@ -392,7 +392,7 @@
 "posni-sir":[],
 "jogurt":[{"id":"0006714","n":"Yogourt nature à la grecque (valable uniquement en Suisse romande)","p":3.19,"b":"QUALITÉ SUISSE","r":4.15,"s":"1000 g","up":3.19,"u":"kg","pr":1,"pl":"-23%","pct":23.1,"from":"2026-09-17","to":"2026-09-23","c":"Encore plus d'économies","img":"https://imgproxy-retcat.assets.schwarz/8l51PKloFRAhy45K2LhqmyL75wnX7RnRJ-6Miyt1A_E/sm:0/exar:1:ce/w:1500/h:1125/cz/M6Ly9wcm9kLWNhd/GFsb2ctbWVkaWEvY2gvMS8yODk5RDFEODgyMjg2RDY5RDFDQUFBMDg/zMjk0MjRCREQ3QjlEQTYxRTY3N0E5MzRCM0JFRkUwNTJCMkQyNjk0LnBuZw.png","iu":3.19,"iru":4.15}],
 "cottage":[],
-"maslac":[{"id":"0082835","n":"Courge butternut suisse","p":1.99,"b":"QUALITÉ SUISSE","r":2.99,"s":"Le kg","up":1.99,"u":"kg","ax":1,"pr":1,"pl":"-33%","pct":33.4,"from":"2026-09-17","to":"2026-09-23","c":"Encore plus d'économies","img":"https://imgproxy-retcat.assets.schwarz/GFCFCNrl2fE5YhgnNcx17wI0MkqTMHCCF6h5xzvKlzs/sm:0/exar:1:ce/w:1500/h:1125/cz/M6Ly9wcm9kLWNhd/GFsb2ctbWVkaWEvY2gvMS8yNzJCMkRGMkM0N0E3NTAwMjk4NkYxNzQ/0QTc0MTk5Mjg4Qjc0NDYwQzhGNEU2RTY5MUNCMzUzOTM4RUM3Nzg4LnBuZw.png","iu":1.99,"iru":2.99},{"id":"5602206","n":"Corbeille de beurre au fromage de chèvre (valable uniquement en Suisse romande) Nouveauté – disponible pour une durée limitée","p":3.49,"b":"DUC DE COEUR","s":"4 x 100 g","up":8.725,"u":"kg","c":"Des rêves français. Des prix de rêve. Ça vaut le coup.","img":"https://imgproxy-retcat.assets.schwarz/2AHEPuz4irWU73iQg1ltDxy3TaEFrcAkjGPt3Tvo_G8/sm:0/exar:1:ce/w:1500/h:1125/cz/M6Ly9wcm9kLWNhd/GFsb2ctbWVkaWEvY2gvMS9COTRCNDQ4M0NFRjNCNjI2NzdDM0M2MDF/CMDcxNzc0RjNCNzJDRkZBNzVEQkRGOTg1MTVFRDY1RThGMENEQjcxLnBuZw.png","iu":8.725}],
+"maslac":[{"id":"5602206","n":"Corbeille de beurre au fromage de chèvre (valable uniquement en Suisse romande) Nouveauté – disponible pour une durée limitée","p":3.49,"b":"DUC DE COEUR","s":"4 x 100 g","up":8.725,"u":"kg","c":"Des rêves français. Des prix de rêve. Ça vaut le coup.","img":"https://imgproxy-retcat.assets.schwarz/2AHEPuz4irWU73iQg1ltDxy3TaEFrcAkjGPt3Tvo_G8/sm:0/exar:1:ce/w:1500/h:1125/cz/M6Ly9wcm9kLWNhd/GFsb2ctbWVkaWEvY2gvMS9COTRCNDQ4M0NFRjNCNjI2NzdDM0M2MDF/CMDcxNzc0RjNCNzJDRkZBNzVEQkRGOTg1MTVFRDY1RThGMENEQjcxLnBuZw.png","iu":8.725}],
 "mocarela":[],
 "gruyere":[],
 "ovsene-pahuljice":[],
