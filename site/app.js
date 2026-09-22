@@ -621,7 +621,8 @@
           h("span", { class: "now", text: p.p == null ? "—" : money(p.p) }),
           p.r && p.p != null && p.r > p.p ? h("span", { class: "old", text: money(p.r) }) : null,
           p.up ? h("span", { class: "up", text: `${money(p.up)} CHF/${unitLabel(p.u)}${p.ax ? " (približno)" : ""}` }) : null),
-        h("div", { class: "foot" }, h("span", { text: until || (p.c || "") }), p.url ? h("a", { href: p.url, target: "_blank", rel: "noopener", text: "Prodavnica ↗" }) : null)));
+        h("div", { class: "foot" }, h("span", { text: until || (p.c || "") }), p.url ? h("a", { href: p.url, target: "_blank", rel: "noopener", text: "Prodavnica ↗" }) : null,
+          p.soon ? null : addBtn(cartEntry(p.st, p, {}), true))));
   }
   const SMALL_WORDS = new Set(["de", "du", "des", "la", "le", "les", "au", "aux", "et", "en", "a", "à", "d", "l", "di", "con", "avec", "sans", "pour"]);
   const initials = (t) => {
@@ -836,7 +837,15 @@
     [/^luk/, ["luk\\b", "luka\\b", "oignon"]],
     [/^banan/, ["banan"]],
     [/^jabuk/, ["jabuk", "pommes?\\b"]],
-    [/^(maslac|puter$)/, ["maslac", "beurre\\b"]],
+    [/^(maslac|puter$)/, ["maslac\\b", "puter\\b(?! od)(?<!kikiriki puter)", "beurre\\b"]],
+    [/^skir/, ["skir", "skyr"]],
+    [/^sitan$/, ["sitn", "zrnast", "cottage"]],
+    [/^biftek/, ["biftek", "ramstek", "juneci (antrikot|stek|file)"]],
+    [/^krmenadl/, ["krmenadl", "kotlet"]],
+    [/^celer/, ["celer"]],
+    [/^limun/, ["^limun(i|ovi)?\\b"]],
+    [/^zelen$/, ["zelen", "glavicast", "mesan", "mlad", "ledena", "rimsk"]],
+    [/^kikirik/, ["kikirik"]],
     [/^sir(a|om)?$/, ["sir\\b", "sira\\b", "sirom\\b", "fromage"]],
     [/^kaf[aeu]/, ["kafa\\b", "kafe\\b", "kafu\\b", "cafe\\b"]],
     [/^ulj/, ["ulj", "huile"]],
@@ -846,13 +855,20 @@
   ];
   const LIST_STOP = new Set(["i", "za", "sa", "od", "kg", "g", "gr", "l", "dl", "ml", "kom", "komad", "komada", "pak", "pakovanje"]);
   function listMatcher(line) {
-    const words = fold(line).split(/[^a-z0-9]+/).filter((w) => w.length >= 2 && !LIST_STOP.has(w) && !/^\d+$/.test(w));
+    let words = fold(line).split(/[^a-z0-9]+/).filter((w) => w.length >= 2 && !LIST_STOP.has(w) && !/^\d+$/.test(w));
+    // "smrznut(o/i/a)" is not part of the name, it means: only frozen products
+    const frozen = words.some((w) => /^(smrznut|zamrznut)/.test(w));
+    words = words.filter((w) => !/^(smrznut|zamrznut)/.test(w));
     if (!words.length) return null;
     const rxs = words.map((w) => {
-      for (const [test, alts] of LIST_SYNONYMS) if (test.test(w)) return new RegExp(`\\b(?:${alts.join("|")})`);
+      const plain = w === "puter" && words.some((x) => /^kikirik/.test(x)); // peanut butter is not butter
+      if (!plain) for (const [test, alts] of LIST_SYNONYMS) if (test.test(w)) return new RegExp(`\\b(?:${alts.join("|")})`);
       return new RegExp(`\\b${w.length >= 5 ? w.slice(0, w.length - 2) : w}`);
     });
-    return (text) => rxs.every((rx) => rx.test(text));
+    const match = (text) => rxs.every((rx) => rx.test(text));
+    match.frozen = frozen;
+    match.od = /\bod\b/.test(fold(line));
+    return match;
   }
   function basketRules(it) {
     if (!it._rules) {
@@ -866,7 +882,7 @@
     const items = state.basket.items.filter((it) => m(fold(`${it.name} ${it.id.replace(/-/g, " ")}`)));
     // 1) the basket's own rules are precise ("mleko" = milk, not yogurt or chocolate)
     const byRules = state.promos.filter((p) => {
-      if (p.soon || !items.length) return false;
+      if (p.soon || !items.length || (m.frozen && !p.fz)) return false;
       const text = fold(`${p.b || ""} ${p.n}`);
       return items.some((it) => {
         const r = basketRules(it);
@@ -876,8 +892,10 @@
     // 2) otherwise the start of the Serbian name has to match ("Pileći vrat" yes, "Kocke za pileću supu" no)
     const seen = new Set(byRules.map((p) => `${p.st}/${p.id}`));
     const byName = state.promos.filter((p) => {
-      if (p.soon || seen.has(`${p.st}/${p.id}`)) return false;
-      const head = p._lh || (p._lh = fold(p.sr || p.n).split(/[^a-z0-9]+/).filter(Boolean).slice(0, 2).join(" "));
+      if (p.soon || seen.has(`${p.st}/${p.id}`) || (m.frozen && !p.fz)) return false;
+      // first two words; three for "X od Y" when the list line says "od" too ("Puter od kikirikija")
+      const w = p._lw || (p._lw = fold(p.sr || p.n).split(/[^a-z0-9]+/).filter(Boolean));
+      const head = w.slice(0, m.od && w[1] === "od" ? 3 : 2).join(" ");
       return m(head);
     });
     const promos = [...byRules, ...byName];
@@ -887,9 +905,109 @@
     promos.sort((a, b) => ((a.u === unit ? 0 : 1) - (b.u === unit ? 0 : 1)) || ((a.u === unit ? a.up : a.p) ?? 1e9) - ((b.u === unit ? b.up : b.p) ?? 1e9));
     return { line, items, promos, unit };
   }
+
+  // ── shopping cart: concrete products picked from the list / promos, kept only on this device ──
+  const cart = {
+    all() { const v = store.get("kupovina", []); return Array.isArray(v) ? v : []; },
+    save(items) { store.set("kupovina", items); cartBadge(); cartHooks.forEach((f) => f()); },
+    has(key) { return this.all().some((e) => e.key === key); },
+    toggle(entry) {
+      const items = this.all();
+      const i = items.findIndex((e) => e.key === entry.key);
+      if (i >= 0) items.splice(i, 1); else items.push({ ...entry, qty: 1, done: false, at: Date.now() });
+      this.save(items);
+      return i < 0;
+    },
+    patch(key, fn) { const items = this.all(); const e = items.find((x) => x.key === key); if (e) { fn(e); this.save(items); } },
+  };
+  const cartHooks = new Set();
+  function cartBadge() {
+    const el = document.getElementById("cart-count");
+    if (!el) return;
+    const n = cart.all().filter((e) => !e.done).length;
+    el.textContent = n ? String(n) : "";
+    el.hidden = !n;
+  }
+  function cartEntry(st, c, extra) {
+    return { key: `${st}/${c.id}`, st, id: c.id, name: c.sr || c.n, orig: c.sr ? c.n : "", s: c.s || "", p: c.p, r: c.r && c.r > c.p ? c.r : null, to: c.to || null, ...extra };
+  }
+  // "+" toggle that adds a concrete product to the cart (and shows when it is already there)
+  function addBtn(entry, compact) {
+    const btn = h("button", { type: "button", class: compact ? "add sm" : "add" });
+    const paint = () => {
+      const on = cart.has(entry.key);
+      btn.classList.toggle("on", on);
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+      btn.textContent = on ? "✓" : "+";
+      btn.title = on ? "U korpi za kupovinu — klikni da skloniš" : "Dodaj u korpu za kupovinu";
+      btn.setAttribute("aria-label", `${on ? "Skloni iz korpe" : "Dodaj u korpu"}: ${entry.name}`);
+    };
+    btn.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); cart.toggle(entry); paint(); });
+    paint();
+    return btn;
+  }
+  function cartText(items) {
+    const lines = [];
+    for (const k of state.meta.order) {
+      const rows = items.filter((e) => e.st === k && !e.done);
+      if (!rows.length) continue;
+      lines.push(`${storeName(k)}:`);
+      for (const e of rows) lines.push(`- ${e.qty > 1 ? e.qty + "× " : ""}${e.name}${e.s ? ` (${e.s})` : ""}${e.p != null ? ` — ${money(e.p * e.qty)} CHF` : ""}`);
+    }
+    return lines.join("\n");
+  }
+  function renderCart(box) {
+    const items = cart.all();
+    if (!items.length) {
+      fill(box, h("div", { class: "cart empty-cart" },
+        h("h3", { text: "Korpa za kupovinu" }),
+        h("p", { class: "muted", text: "Klikni + pored proizvoda ispod (ili na kartici u Akcijama) i ovde dobijaš spisak po prodavnicama, sa cenama i kvačicama dok kupuješ." })));
+      return;
+    }
+    const left = items.filter((e) => !e.done);
+    const total = left.reduce((a, e) => a + (e.p || 0) * e.qty, 0);
+    const saved = left.reduce((a, e) => a + (e.r ? (e.r - e.p) * e.qty : 0), 0);
+    const note = h("span", { class: "muted", "aria-live": "polite" });
+    const groups = state.meta.order.filter((k) => items.some((e) => e.st === k)).map((k) => {
+      const rows = items.filter((e) => e.st === k).sort((a, b) => a.done - b.done);
+      const sub = rows.filter((e) => !e.done).reduce((a, e) => a + (e.p || 0) * e.qty, 0);
+      return h("section", { class: "cart-store" },
+        h("h4", null, swatch(k, "dot"), storeName(k), h("span", { class: "sum", text: sub ? `${money(sub)} CHF` : "✓ sve" })),
+        h("ul", null, rows.map((e) => h("li", { class: e.done ? "done" : null },
+          h("label", null,
+            h("input", { type: "checkbox", checked: e.done, onchange: (ev) => cart.patch(e.key, (x) => { x.done = ev.target.checked; }) }),
+            h("span", { class: "nm" }, h("span", { text: e.name }), h("span", { class: "s", text: [e.s, e.to ? `akcija do ${fmtDate(e.to)}` : null].filter(Boolean).join(" · ") }))),
+          h("span", { class: "qty" },
+            h("button", { type: "button", "aria-label": "Manje", onclick: () => cart.patch(e.key, (x) => { x.qty = Math.max(1, x.qty - 1); }), text: "−" }),
+            h("span", { text: String(e.qty) }),
+            h("button", { type: "button", "aria-label": "Više", onclick: () => cart.patch(e.key, (x) => { x.qty = Math.min(99, x.qty + 1); }), text: "+" })),
+          h("b", { class: "pr", text: e.p != null ? money(e.p * e.qty) : "—" }),
+          h("button", { type: "button", class: "x", "aria-label": `Skloni ${e.name}`, title: "Skloni", onclick: () => cart.save(cart.all().filter((x) => x.key !== e.key)), text: "×" })))));
+    });
+    fill(box, h("div", { class: "cart" },
+      h("div", { class: "cart-head" },
+        h("h3", null, "Korpa za kupovinu ", h("span", { class: "muted", text: `· ${left.length} od ${items.length}` })),
+        h("div", { class: "cart-total" }, h("b", { text: `${money(total)} CHF` }), saved > 0.004 ? h("span", { class: "muted", text: ` · ušteda ${money(saved)}` }) : null)),
+      groups,
+      h("div", { class: "li-actions" },
+        h("button", { type: "button", class: "btn", onclick: async () => {
+          const text = cartText(cart.all());
+          if (!text) { note.textContent = "Sve je već kupljeno."; return; }
+          try {
+            if (navigator.share) await navigator.share({ title: "Korpa za kupovinu", text });
+            else { await navigator.clipboard.writeText(text); note.textContent = "Spisak kopiran."; }
+          } catch { /* share dismissed */ }
+        }, text: "Podeli spisak" }),
+        items.some((e) => e.done) ? h("button", { type: "button", class: "btn ghost", onclick: () => cart.save(cart.all().filter((e) => !e.done)), text: "Skloni kupljeno" }) : null,
+        h("button", { type: "button", class: "btn ghost", onclick: () => { if (confirm("Isprazniti korpu za kupovinu?")) cart.save([]); }, text: "Isprazni" }),
+        note)));
+  }
+
+  const listRow = { line: "" }; // which list line the rows being drawn belong to
   function listPromoRow(p) {
     const until = p.to ? `do ${fmtDate(p.to)}` : "";
     return h("div", { class: "li-row" },
+      addBtn(cartEntry(p.st, p, { line: listRow.line })),
       h("span", { class: "st" }, swatch(p.st, "dot"), storeName(p.st)),
       h("div", { class: "li-name" },
         h("button", { type: "button", class: "linkish", onclick: () => openProduct(p.st, p.id, p.sr), text: p.sr || p.n }),
@@ -902,6 +1020,7 @@
   function listBasketRow(it) {
     const best = bestNow(it);
     return h("a", { class: "li-basket", href: `#korpa/${encodeURIComponent(it.id)}` },
+      best ? addBtn(cartEntry(best.k, best.c, { line: listRow.line, name: best.c.sr || it.name, s: [best.c.b, best.c.n, best.c.s].filter(Boolean).join(" · ") }), true) : null,
       h("span", { class: "k", text: it.name }),
       best
         ? h("span", null, "najjeftinije ", h("b", { text: `${money(best.c.iu)} CHF/${unitLabel(it.unit)}` }), ` · ${[...best.ties].map(storeName).join(", ")}`)
@@ -930,14 +1049,14 @@
       summary.textContent = !found.length ? ""
         : order.length ? `Akcije za tvoju listu: ${order.map((k) => `${storeName(k)} ${perStore[k]}`).join(" · ")} (broj stavki sa bar jednom akcijom)`
         : "Trenutno nema akcija ni za jednu stavku sa liste.";
-      fill(results, found.length ? found.map((f) => h("section", { class: "li" },
+      fill(results, found.length ? found.map((f) => (listRow.line = f.line, h("section", { class: "li" },
         h("h3", null, f.line, h("span", { class: "muted", text: ` · ${f.promos.length} ${plural(f.promos.length, "akcija", "akcije", "akcija")}` })),
         f.items.length ? h("div", { class: "li-baskets" }, f.items.map(listBasketRow)) : null,
         f.promos.length
           ? h("div", { class: "li-promos" }, f.promos.slice(0, 3).map(listPromoRow),
             f.promos.length > 3 ? h("button", { type: "button", class: "more-link", onclick: () => { state.promo.q = f.line; state.promo.limit = 60; location.hash = "#akcije"; }, text: `Sve akcije (${f.promos.length}) →` }) : null)
           : h("p", { class: "muted", text: "Trenutno nema akcija za ovu stavku." }),
-        !f.items.length && !f.promos.length ? h("button", { type: "button", class: "more-link", onclick: () => { state.prod.q = f.line; location.hash = "#proizvodi"; }, text: "Potraži u istoriji cena →" }) : null))
+        !f.items.length && !f.promos.length ? h("button", { type: "button", class: "more-link", onclick: () => { state.prod.q = f.line; location.hash = "#proizvodi"; }, text: "Potraži u istoriji cena →" }) : null)))
         : h("p", { class: "muted", text: "Upiši šta kupuješ — po jednu stavku u redu (npr. piletina, mleko, jaja, pirinač)." }));
     };
     const area = h("textarea", {
@@ -951,13 +1070,17 @@
       try { await navigator.clipboard.writeText(url); shareNote.textContent = "Link kopiran — otvori ga na telefonu i lista se prenosi."; }
       catch { shareNote.textContent = url; }
     }, text: "Kopiraj link liste" });
+    const cartBox = h("div", { id: "cart" });
+    cartHooks.clear();
+    cartHooks.add(() => { if (state.view === "lista") renderCart(cartBox); });
+    renderCart(cartBox);
     fill($app, h("div", null,
       h("div", { class: "view-head" },
         h("h2", { text: "Moja lista" }),
-        h("p", { text: "Za svaku stavku: gde je najjeftinija u korpi i koje akcije trenutno važe. Lista se čuva samo na ovom uređaju." })),
+        h("p", { text: "Za svaku stavku: gde je najjeftinija u korpi i koje akcije trenutno važe. Klikni + da proizvod staviš u korpu za kupovinu. Sve se čuva samo na ovom uređaju." })),
       h("div", { class: "li-editor" }, h("label", { for: "lista-text", class: "sr-only", text: "Lista za kupovinu" }), area,
         h("div", { class: "li-actions" }, share, shareNote)),
-      summary, results));
+      cartBox, summary, results));
     redraw(text);
   }
 
@@ -1007,6 +1130,8 @@
     const saved = store.get("promo", null);
     if (saved) Object.assign(state.promo, { sort: saved.sort || "pct", min: saved.min || 0, group: saved.group === "meso-smrz" ? "" : saved.group || "", frozen: saved.frozen || "", soon: !!saved.soon });
     updateHeader();
+    cartBadge();
+    window.addEventListener("storage", (e) => { if (e.key === "lk:kupovina") { cartBadge(); cartHooks.forEach((f) => f()); } });
     window.addEventListener("hashchange", route);
     document.getElementById("sheet").addEventListener("click", (e) => { if (e.target.id === "sheet") e.target.close(); });
     route();
