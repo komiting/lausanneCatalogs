@@ -1,8 +1,8 @@
 {
-"date":"2026-10-01",
+"date":"2026-10-02",
 "stats":{
 "campaigns_skipped":9,
-"details_fetched":39
+"details_fetched":0
 },
 "promos":[
 {"id":"0229747","n":"Brioche croissant à la crème","p":0.99,"r":1.79,"s":"100 g","up":9.9,"u":"kg","pr":1,"pl":"-44%","pct":44.7,"from":"2026-10-01","to":"2026-10-07","c":"Encore plus d'économies","img":"https://imgproxy-retcat.assets.schwarz/J8nCqPUTRSHQ_wM-dxHaBGyuzg9pAAMyPYsNGOXTlJc/sm:0/exar:1:ce/w:1500/h:1125/cz/M6Ly9wcm9kLWNhd/GFsb2ctbWVkaWEvY2gvMS80OERCODk4QUFFQjZFMDExMjM5QzAwMUY/xNjg4QjczQjZBQTNBOUIxNDdDNDAxRDM3NTRCNzlBRUVFQ0YzMTI0LnBuZw.png"},
@@ -223,7 +223,6 @@
 {"id":"0005278","n":"Original, pack de 3/Double Cream, pack de 3","p":4.95,"b":"OREO","s":"462 g","up":10.714,"u":"kg","soon":1,"c":"Les saveurs américaines à petit prix, ça vaut le coup.","img":"https://imgproxy-retcat.assets.schwarz/2K-sF18NT_-aE-N6lWKgQdMOCoCGJlmxmXbiADA35Bw/sm:0/exar:1:ce/w:1500/h:1125/cz/M6Ly9wcm9kLWNhd/GFsb2ctbWVkaWEvY2gvMS9DNTEzMkI5NEI4MEJDQUFCNEFCNTNDMDc/xMTU1Mjg1MkFDQTkwOTIyMTcxRjgzMTczQzU4RDUyQjRFMDg5NDg1LnBuZw.png"},
 {"id":"0521042","n":"Pantalon en molleton 98/104 – 122/128","p":4.99,"b":"LUPILU/DISNEY/MARVEL","s":"La pièce","up":4.99,"u":"pc","soon":1,"c":"Articles de marque Disney et Marvel.","img":"https://imgproxy-retcat.assets.schwarz/OMFqNM9v2wZ61UPWc_lsTd3BCQ0VamzIIHioGP2KHWs/sm:0/exar:1:ce/w:1500/h:1125/cz/M6Ly9wcm9kLWNhd/GFsb2ctbWVkaWEvY2gvMS83MzQxM0E4RTY1NTZGMDdDREFFRDc3MDg/xRjc1Q0FCNDJDMzE2MEM4QTdCQzI3RUZDRjdDRUQ2RjQ0NTc5Q0ExLnBuZw.png"},
 {"id":"0521038","n":"Pantoufles 25 – 30","p":4.99,"b":"DISNEY/MARVEL","s":"La pièce","up":4.99,"u":"pc","soon":1,"c":"Articles de marque Disney et Marvel.","img":"https://imgproxy-retcat.assets.schwarz/XVTLzeLzIseBguW_GkgL_b7SOqVeK_7ov7vONF8Rcs4/sm:0/exar:1:ce/w:1500/h:1125/cz/M6Ly9wcm9kLWNhd/GFsb2ctbWVkaWEvY2gvMS9BRjJFQTBBQjVFRThGRDJGOERDMDE4MjQ/wRjNGMDgwQ0UyMTY1RDRCMERFREZENTM2QTgwMzRBODRBMTM0OEY2LnBuZw.png"},
-{"id":"0120522","n":"Pastrami","p":3.99,"b":"MCENNEDY","s":"100 g","up":39.9,"u":"kg","soon":1,"c":"Les saveurs américaines à petit prix, ça vaut le coup.","img":"https://imgproxy-retcat.assets.schwarz/kA3RXLFHr5wtrZ6ZPF_4se8trvZwtJGxCRGJYHeBdy8/sm:0/exar:1:ce/w:1500/h:1125/cz/M6Ly9wcm9kLWNhd/GFsb2ctbWVkaWEvY2gvMS8yQThDNzcwQkJGMjczODNGMUE3MDg0NEU/5RDA3RDdCMjQxNEU3Q0I0MjBEQ0RFN0EyM0M1QjA1MEZBNzIyQTQwLnBuZw.png"},
 {"id":"0205520","n":"Pavés de mozzarella en panure croustillante","p":3.25,"b":"MCENNEDY","s":"350 g","up":9.286,"u":"kg","soon":1,"c":"Les saveurs américaines à petit prix, ça vaut le coup.","img":"https://imgproxy-retcat.assets.schwarz/kO1EZB8e-Y_bWGRn-mtV1-66i6xRUFQ_DMvRHZuqick/sm:0/exar:1:ce/w:1500/h:1125/cz/M6Ly9wcm9kLWNhd/GFsb2ctbWVkaWEvY2gvMS9GMTYwQjAzMzQ0RDAyNDk4NzFDRDY4M0R/GQzhENkI2Q0ZEMEVCOUE5NzFGRTkyNEExNUUwRTA3NjRGNEUxOEVDLnBuZw.png"},
 {"id":"1801188","n":"Peanuts Party Pack","p":9.49,"b":"M&M’S","s":"800 g","up":11.863,"u":"kg","soon":1,"c":"Les saveurs américaines à petit prix, ça vaut le coup.","img":"https://imgproxy-retcat.assets.schwarz/H0NUa4-Hs3jrW14nVlKh2mxLGP4nRrDkVw-_MXMoy1E/sm:0/exar:1:ce/w:1500/h:1125/cz/M6Ly9wcm9kLWNhd/GFsb2ctbWVkaWEvY2gvMS8wREYxQ0Q1REVDOTc3NDIwRDM1QkZFRDE/3Mjk5NDEzMUI5RURBMjE4Mzc3NEVERDg0NDM5NzY0QzE2RjU5RTI4LnBuZw.png"},
 {"id":"0203169","n":"Picco Pizzi","p":3.15,"b":"MCENNEDY","s":"12 x 30 g","up":8.75,"u":"kg","soon":1,"c":"Les saveurs américaines à petit prix, ça vaut le coup.","img":"https://imgproxy-retcat.assets.schwarz/1qP7vYUyzLgJCL0BVZiGdddzmBxcgK4hPXLNa_4StFo/sm:0/exar:1:ce/w:1500/h:1125/cz/M6Ly9wcm9kLWNhd/GFsb2ctbWVkaWEvY2gvMS9EQThCMkMzRDQzQkYyRjM4OTM5NEM2RDd/GNTJFRDRFNkM2RDVGMjFERkQ1MkY5OTNCOURCNEUwRkEzRjQxNzYwLnBuZw.png"},
