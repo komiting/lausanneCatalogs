@@ -329,70 +329,80 @@
     "lidl": "ok",
     "migros": "ok"
    }
+  },
+  {
+   "date": "2026-10-19",
+   "stores": {
+    "aldi": "ok",
+    "aligro": "ok",
+    "coop": "ok",
+    "lidl": "ok",
+    "migros": "ok"
+   }
   }
  ],
  "stores": {
   "aldi": {
    "counts": {
     "basket": 23,
-    "changes": 10,
-    "products": 2101,
-    "promos": 113
+    "changes": 99,
+    "products": 2159,
+    "promos": 115
    },
    "error": null,
-   "last_ok": "2026-10-18",
-   "last_run": "2026-10-18T09:05:17+00:00",
-   "prev_ok": "2026-10-17",
-   "requests": 40,
-   "seconds": 40.3,
+   "last_ok": "2026-10-19",
+   "last_run": "2026-10-19T10:17:51+00:00",
+   "prev_ok": "2026-10-18",
+   "requests": 41,
+   "seconds": 39.4,
    "status": "ok",
    "warnings": []
   },
   "aligro": {
    "counts": {
     "basket": 22,
-    "changes": 1504,
+    "changes": 0,
     "products": 1829,
     "promos": 1829
    },
    "error": null,
-   "last_ok": "2026-10-18",
-   "last_run": "2026-10-18T09:09:29+00:00",
-   "prev_ok": "2026-10-17",
+   "last_ok": "2026-10-19",
+   "last_run": "2026-10-19T10:20:55+00:00",
+   "prev_ok": "2026-10-18",
    "requests": 25,
-   "seconds": 43.2,
+   "seconds": 47.2,
    "status": "ok",
    "warnings": []
   },
   "coop": {
    "counts": {
     "basket": 32,
-    "changes": 3,
-    "products": 1368,
-    "promos": 860
+    "changes": 119,
+    "products": 1420,
+    "promos": 914
    },
    "error": null,
-   "last_ok": "2026-10-18",
-   "last_run": "2026-10-18T09:07:20+00:00",
-   "prev_ok": "2026-10-17",
+   "last_ok": "2026-10-19",
+   "last_run": "2026-10-19T10:19:58+00:00",
+   "prev_ok": "2026-10-18",
    "requests": 54,
-   "seconds": 80.1,
+   "seconds": 81.2,
    "status": "ok",
    "warnings": []
   },
   "lidl": {
    "counts": {
     "basket": 11,
-    "changes": 79,
+    "changes": 15,
     "products": 470,
-    "promos": 297
+    "promos": 289
    },
    "error": null,
-   "last_ok": "2026-10-18",
-   "last_run": "2026-10-18T09:08:46+00:00",
-   "prev_ok": "2026-10-17",
-   "requests": 175,
-   "seconds": 86.1,
+   "last_ok": "2026-10-19",
+   "last_run": "2026-10-19T10:20:07+00:00",
+   "prev_ok": "2026-10-18",
+   "requests": 18,
+   "seconds": 9.4,
    "status": "ok",
    "warnings": []
   },
@@ -400,15 +410,15 @@
    "counts": {
     "basket": 32,
     "changes": 1,
-    "products": 390,
-    "promos": 50
+    "products": 382,
+    "promos": 47
    },
    "error": null,
-   "last_ok": "2026-10-18",
-   "last_run": "2026-10-18T09:06:00+00:00",
-   "prev_ok": "2026-10-17",
+   "last_ok": "2026-10-19",
+   "last_run": "2026-10-19T10:18:37+00:00",
+   "prev_ok": "2026-10-18",
    "requests": 73,
-   "seconds": 43.1,
+   "seconds": 46.1,
    "status": "ok",
    "warnings": []
   }
