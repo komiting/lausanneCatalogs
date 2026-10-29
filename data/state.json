@@ -429,86 +429,96 @@
     "lidl": "ok",
     "migros": "ok"
    }
+  },
+  {
+   "date": "2026-10-29",
+   "stores": {
+    "aldi": "ok",
+    "aligro": "ok",
+    "coop": "ok",
+    "lidl": "ok",
+    "migros": "ok"
+   }
   }
  ],
  "stores": {
   "aldi": {
    "counts": {
     "basket": 23,
-    "changes": 65,
-    "products": 2093,
-    "promos": 93
+    "changes": 72,
+    "products": 2103,
+    "promos": 124
    },
    "error": null,
-   "last_ok": "2026-10-28",
-   "last_run": "2026-10-28T10:49:43+00:00",
-   "prev_ok": "2026-10-27",
+   "last_ok": "2026-10-29",
+   "last_run": "2026-10-29T11:06:00+00:00",
+   "prev_ok": "2026-10-28",
    "requests": 40,
-   "seconds": 38.6,
+   "seconds": 41.7,
    "status": "ok",
    "warnings": []
   },
   "aligro": {
    "counts": {
     "basket": 20,
-    "changes": 1,
+    "changes": 2,
     "products": 828,
     "promos": 828
    },
    "error": null,
-   "last_ok": "2026-10-28",
-   "last_run": "2026-10-28T10:52:35+00:00",
-   "prev_ok": "2026-10-27",
+   "last_ok": "2026-10-29",
+   "last_run": "2026-10-29T11:09:37+00:00",
+   "prev_ok": "2026-10-28",
    "requests": 12,
-   "seconds": 34.4,
+   "seconds": 27.9,
    "status": "ok",
    "warnings": []
   },
   "coop": {
    "counts": {
     "basket": 32,
-    "changes": 389,
-    "products": 1794,
-    "promos": 1307
+    "changes": 195,
+    "products": 1288,
+    "promos": 781
    },
    "error": null,
-   "last_ok": "2026-10-28",
-   "last_run": "2026-10-28T10:51:53+00:00",
-   "prev_ok": "2026-10-27",
-   "requests": 57,
-   "seconds": 84.9,
+   "last_ok": "2026-10-29",
+   "last_run": "2026-10-29T11:08:00+00:00",
+   "prev_ok": "2026-10-28",
+   "requests": 54,
+   "seconds": 75.8,
    "status": "ok",
    "warnings": []
   },
   "lidl": {
    "counts": {
     "basket": 6,
-    "changes": 0,
-    "products": 605,
-    "promos": 460
+    "changes": 168,
+    "products": 516,
+    "promos": 387
    },
    "error": null,
-   "last_ok": "2026-10-28",
-   "last_run": "2026-10-28T10:52:01+00:00",
-   "prev_ok": "2026-10-27",
-   "requests": 13,
-   "seconds": 7.2,
+   "last_ok": "2026-10-29",
+   "last_run": "2026-10-29T11:09:09+00:00",
+   "prev_ok": "2026-10-28",
+   "requests": 67,
+   "seconds": 69.5,
    "status": "ok",
    "warnings": []
   },
   "migros": {
    "counts": {
     "basket": 32,
-    "changes": 5,
-    "products": 403,
+    "changes": 98,
+    "products": 404,
     "promos": 58
    },
    "error": null,
-   "last_ok": "2026-10-28",
-   "last_run": "2026-10-28T10:50:28+00:00",
-   "prev_ok": "2026-10-27",
+   "last_ok": "2026-10-29",
+   "last_run": "2026-10-29T11:06:44+00:00",
+   "prev_ok": "2026-10-28",
    "requests": 73,
-   "seconds": 45.2,
+   "seconds": 44.0,
    "status": "ok",
    "warnings": []
   }
