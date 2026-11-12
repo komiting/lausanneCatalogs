@@ -569,38 +569,48 @@
     "lidl": "ok",
     "migros": "ok"
    }
+  },
+  {
+   "date": "2026-11-12",
+   "stores": {
+    "aldi": "ok",
+    "aligro": "ok",
+    "coop": "error",
+    "lidl": "ok",
+    "migros": "ok"
+   }
   }
  ],
  "stores": {
   "aldi": {
    "counts": {
     "basket": 23,
-    "changes": 63,
-    "products": 2191,
-    "promos": 123
+    "changes": 88,
+    "products": 2244,
+    "promos": 91
    },
    "error": null,
-   "last_ok": "2026-11-11",
-   "last_run": "2026-11-11T12:09:51+00:00",
-   "prev_ok": "2026-11-10",
-   "requests": 42,
-   "seconds": 41.1,
+   "last_ok": "2026-11-12",
+   "last_run": "2026-11-12T13:16:17+00:00",
+   "prev_ok": "2026-11-11",
+   "requests": 43,
+   "seconds": 43.7,
    "status": "ok",
    "warnings": []
   },
   "aligro": {
    "counts": {
     "basket": 18,
-    "changes": 3,
-    "products": 881,
-    "promos": 881
+    "changes": 21,
+    "products": 880,
+    "promos": 880
    },
    "error": null,
-   "last_ok": "2026-11-11",
-   "last_run": "2026-11-11T12:12:50+00:00",
-   "prev_ok": "2026-11-10",
+   "last_ok": "2026-11-12",
+   "last_run": "2026-11-12T13:19:31+00:00",
+   "prev_ok": "2026-11-11",
    "requests": 14,
-   "seconds": 42.4,
+   "seconds": 43.2,
    "status": "ok",
    "warnings": []
   },
@@ -613,53 +623,53 @@
    },
    "error": "RuntimeError: sve pretrage su neuspešne",
    "last_ok": "2026-11-10",
-   "last_run": "2026-11-11T12:11:59+00:00",
+   "last_run": "2026-11-12T13:18:25+00:00",
    "prev_ok": "2026-11-09",
-   "requests": 56,
-   "seconds": 83.4,
+   "requests": 54,
+   "seconds": 84.0,
    "status": "error",
    "warnings": [
-    "pretraga 'poitrine de poulet': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/poitrine%20de%20poulet: {\n   \"errorId\" : \"a68d86fe-dce2-4656-bd8d-be40e84483ee-f1063ab\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"Cannot invoke \\\"java.lang.Integer.intValue()\\\" because the return value of \\\"ch.co",
-    "pretraga 'blanc de poulet': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/blanc%20de%20poulet: {\n   \"errorId\" : \"1e5bdc25-d47a-4196-91d7-6055db0b3338-f1063ab\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"Cannot invoke \\\"java.lang.Integer.intValue()\\\" because the return value of \\\"ch.co",
-    "pretraga 'cuisses de poulet': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/cuisses%20de%20poulet: {\n   \"errorId\" : \"c3138445-36f2-4276-b5f7-133b6d16d3f9-f1063ab\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"Cannot invoke \\\"java.lang.Integer.intValue()\\\" because the return value of \\\"ch.co",
-    "pretraga 'viande hachée de boeuf': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/viande%20hach%C3%A9e%20de%20boeuf: {\n   \"errorId\" : \"d2fba365-52cb-4e2d-9452-69a9bf21c9d6-f1063ab\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"Cannot invoke \\\"java.lang.Integer.intValue()\\\" because the return value of \\\"ch.co",
-    "pretraga 'thon': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/thon: {\n   \"errorId\" : \"c6f381b8-21c2-4c84-9561-8c3728f2a4b2-f1063ab\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"Cannot invoke \\\"java.lang.Integer.intValue()\\\" because the return value of \\\"ch.co",
-    "pretraga 'filet de saumon': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/filet%20de%20saumon: {\n   \"errorId\" : \"b9d39a3d-3d13-4506-9965-6a75645d399c-f1063ab\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"Cannot invoke \\\"java.lang.Integer.intValue()\\\" because the return value of \\\"ch.co",
-    "pretraga 'oeufs': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/oeufs: {\n   \"errorId\" : \"a109b790-c14e-49ee-bfe7-81f51da60df9-f1063ab\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"Cannot invoke \\\"java.lang.Integer.intValue()\\\" because the return value of \\\"ch.co",
-    "pretraga 'lait entier': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/lait%20entier: {\n   \"errorId\" : \"637735a5-a153-4d6a-a6c8-eebced8997a8-f1063ab\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"Cannot invoke \\\"java.lang.Integer.intValue()\\\" because the return value of \\\"ch.co",
-    "pretraga 'skyr': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/skyr: {\n   \"errorId\" : \"59a4f4fa-4405-4b54-afb5-d3a45b255e3f-f1063ab\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"Cannot invoke \\\"java.lang.Integer.intValue()\\\" because the return value of \\\"ch.co",
-    "pretraga 'séré maigre': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/s%C3%A9r%C3%A9%20maigre: {\n   \"errorId\" : \"f0d8e544-3f7d-407e-9341-278f7fa8bc91-f1063ab\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"Cannot invoke \\\"java.lang.Integer.intValue()\\\" because the return value of \\\"ch.co"
+    "pretraga 'poitrine de poulet': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/poitrine%20de%20poulet: {\n   \"errorId\" : \"9bf92768-985c-4820-8d5e-cd5d0b82db47-81ba214\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"\"\n}",
+    "pretraga 'blanc de poulet': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/blanc%20de%20poulet: {\n   \"errorId\" : \"a57ec420-ff2a-43e6-b0b2-bad7ea84c47c-81ba214\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"\"\n}",
+    "pretraga 'cuisses de poulet': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/cuisses%20de%20poulet: {\n   \"errorId\" : \"a7070ec4-65db-48f0-89fd-51812050c424-81ba214\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"\"\n}",
+    "pretraga 'viande hachée de boeuf': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/viande%20hach%C3%A9e%20de%20boeuf: {\n   \"errorId\" : \"d5b799fe-c19c-4852-bf13-3ef4656d8c0d-81ba214\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"\"\n}",
+    "pretraga 'thon': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/thon: {\n   \"errorId\" : \"3f97e5ae-1db1-4f28-b300-6fbe9af72497-81ba214\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"\"\n}",
+    "pretraga 'filet de saumon': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/filet%20de%20saumon: {\n   \"errorId\" : \"630f8870-2c6e-4434-b9bc-a6f6e447f945-81ba214\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"\"\n}",
+    "pretraga 'oeufs': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/oeufs: {\n   \"errorId\" : \"15967dae-e80a-4a03-b571-0b0453a31da4-81ba214\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"\"\n}",
+    "pretraga 'lait entier': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/lait%20entier: {\n   \"errorId\" : \"a27a9477-c9c5-4c99-ae85-b52b17e2f68c-81ba214\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"\"\n}",
+    "pretraga 'skyr': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/skyr: {\n   \"errorId\" : \"d7088163-a407-4d75-b5d4-5ecbc0c34f7e-81ba214\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"\"\n}",
+    "pretraga 'séré maigre': HTTP 400 for https://www.coop.ch/rest/v2/coopathome/products/search/s%C3%A9r%C3%A9%20maigre: {\n   \"errorId\" : \"7f60be26-3a66-4b7d-af97-472be3ee445b-81ba214\",\n   \"errorType\" : \"NullPointerError\",\n   \"message\" : \"\"\n}"
    ]
   },
   "lidl": {
    "counts": {
-    "basket": 9,
-    "changes": 0,
-    "products": 513,
-    "promos": 307
+    "basket": 7,
+    "changes": 122,
+    "products": 319,
+    "promos": 226
    },
    "error": null,
-   "last_ok": "2026-11-11",
-   "last_run": "2026-11-11T12:12:08+00:00",
-   "prev_ok": "2026-11-10",
-   "requests": 17,
-   "seconds": 8.9,
+   "last_ok": "2026-11-12",
+   "last_run": "2026-11-12T13:18:48+00:00",
+   "prev_ok": "2026-11-11",
+   "requests": 45,
+   "seconds": 22.7,
    "status": "ok",
    "warnings": []
   },
   "migros": {
    "counts": {
     "basket": 32,
-    "changes": 6,
-    "products": 401,
-    "promos": 61
+    "changes": 110,
+    "products": 417,
+    "promos": 69
    },
    "error": null,
-   "last_ok": "2026-11-11",
-   "last_run": "2026-11-11T12:10:36+00:00",
-   "prev_ok": "2026-11-10",
-   "requests": 73,
-   "seconds": 45.0,
+   "last_ok": "2026-11-12",
+   "last_run": "2026-11-12T13:17:01+00:00",
+   "prev_ok": "2026-11-11",
+   "requests": 74,
+   "seconds": 44.4,
    "status": "ok",
    "warnings": []
   }
